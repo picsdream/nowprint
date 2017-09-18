@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@android:color/transparent"
+        app:theme="@style/ToolBarMasterStyleLight"
+        app:titleTextAppearance="@style/Toolbar.TitleTextMasterLight" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/proceedLayout"
+        android:layout_below="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include
+                    layout="@layout/view_review_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/picsDreamBackground" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/picsDreamBackground"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv_promo"
+                    android:layout_weight="1"
+                    android:fontFamily="@string/font_family_medium"
+                    android:padding="16dp"
+                    android:text="Promo Code"
+                    android:textColor="@color/picsDreamTextLight" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/picsDreamBackground" />
+
+                <TextView
+                    android:id="@+id/tv_promo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:fontFamily="@string/font_family_medium"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"
+                    android:paddingTop="16dp"
+                    android:text="Apply"
+                    android:textAllCaps="false"
+                    android:textColor="?colorPrimary" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/picsDreamBackground" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@string/font_family_medium"
+                        android:text="Total cost"
+                        android:textColor="@color/picsDreamTextMedium"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvInitialPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@string/font_family_medium"
+                        android:gravity="right"
+                        android:text="$200"
+                        android:textColor="@color/picsDreamTextDark"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@string/font_family_medium"
+                            android:text="Discount"
+                            android:textColor="@color/picsDreamTextMedium"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tvChangeDiscount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="12dp"
+                            android:fontFamily="@string/font_family_medium"
+                            android:text="Change"
+                            android:textColor="?colorPrimary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvDiscount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@string/font_family_medium"
+                        android:gravity="right"
+                        android:text="$10"
+                        android:textColor="@color/picsDreamTextDark"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@string/font_family_medium"
+                        android:text="GST (Taxes)"
+                        android:textColor="@color/picsDreamTextMedium"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvTax"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@string/font_family_medium"
+                        android:gravity="right"
+                        android:text="$5"
+                        android:textColor="@color/picsDreamTextDark"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="24dp"
+                    android:background="@color/picsDreamBackground" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_vertical|right">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@string/font_family_medium"
+                        android:text="You pay    "
+                        android:textColor="@color/picsDreamTextMedium"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvPayableAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@string/font_family_medium"
+                        android:text="$250"
+                        android:textColor="@color/picsDreamTextDark"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/picsDreamBackground" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/proceedLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvProceed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_btn_bottom_accent"
+            android:fontFamily="@string/font_family_medium"
+            android:gravity="center"
+            android:padding="@dimen/spacing_medium_2"
+            android:text="Next"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_regular" />
+    </LinearLayout>
+</RelativeLayout>

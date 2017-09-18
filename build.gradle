@@ -1,0 +1,40 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.novoda:bintray-release:0.5.0'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+        maven {
+            url "https://maven.google.com"
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+    compileSdkVersion = 26
+    buildToolsVersion = "26.0.0"
+    minSdkVersion = 17
+    targetSdkVersion = 21
+    supportLibraryVersion = "25.3.1"
+    junitVersion = "4.12"
+    playServiceVersion = "9.2.1"
+    retrofitVersion = '2.3.0'
+    butterKnifeVersion = '8.5.1'
+    okHttpVersion = '3.8.1'
+    firebaseVersion = "11.0.4"
+}

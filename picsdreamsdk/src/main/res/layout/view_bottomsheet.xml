@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottomsheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="24dp"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+    <EditText
+        android:id="@+id/etPromoCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@string/font_family_medium"
+        android:hint="Promo Code"
+        android:inputType="textCapCharacters"
+        android:padding="16dp"
+        android:textColor="@color/picsDreamTextDark" />
+
+    <TextView
+        android:id="@+id/tvPromoError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:fontFamily="@string/font_family_medium"
+        android:text="Promo code is not valid."
+        android:textColor="@color/app_red"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:id="@+id/applyPromoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@color/picsDreamTextDark"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@string/font_family_medium"
+            android:gravity="center"
+            android:padding="@dimen/spacing_medium_2"
+            android:text="Apply"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_regular" />
+    </LinearLayout>
+</LinearLayout>

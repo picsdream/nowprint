@@ -1,0 +1,55 @@
+<resources>
+
+    <!-- Base application theme. Derive everything from here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:fitsSystemWindows">false</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="ToolBarMasterStyleDark" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">#88ffffff</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowDark</item>
+    </style>
+
+    <style name="ToolBarMasterStyleLight" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColorPrimary">@color/picsDreamBlack</item>
+        <item name="android:textColorSecondary">@color/picsDreamBlack</item>
+        <item name="android:background">@color/white</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowLight</item>
+    </style>
+
+    <style name="Toolbar.TitleTextMasterDark" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">@dimen/toolbar_title_text_size</item>
+        <item name="android:fontFamily">@string/font_family_medium</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Toolbar.TitleTextMasterLight" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">@dimen/toolbar_title_text_size</item>
+        <item name="android:fontFamily">@string/font_family_medium</item>
+        <item name="android:textColor">@color/picsDreamBlack</item>
+    </style>
+
+    <style name="DrawerArrowDark" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/white</item>
+        <item name="thickness">1dp</item>
+        <item name="gapBetweenBars">4dp</item>
+        <item name="drawableSize">24dp</item>
+    </style>
+
+    <style name="DrawerArrowLight" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/picsDreamBlack</item>
+        <item name="thickness">1dp</item>
+        <item name="gapBetweenBars">4dp</item>
+        <item name="drawableSize">24dp</item>
+    </style>
+</resources>

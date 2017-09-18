@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="Email address"
+        android:inputType="textEmailAddress"
+        android:paddingBottom="16dp"
+        android:textColor="@color/picsDreamTextDark"
+        android:textColorHint="@color/picsDreamTextLight"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/etMobile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="Mobile number"
+        android:inputType="phone"
+        android:paddingBottom="16dp"
+        android:textColor="@color/picsDreamTextDark"
+        android:textColorHint="@color/picsDreamTextLight"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/etFullName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="Full Name"
+        android:inputType="textCapWords"
+        android:paddingBottom="16dp"
+        android:textColor="@color/picsDreamTextDark"
+        android:textColorHint="@color/picsDreamTextLight"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/etAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="Address"
+        android:inputType="textCapWords"
+        android:paddingBottom="16dp"
+        android:textColor="@color/picsDreamTextDark"
+        android:textColorHint="@color/picsDreamTextLight"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/etCity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_weight="0.5"
+            android:hint="City"
+            android:inputType="textCapWords"
+            android:paddingBottom="16dp"
+            android:textColor="@color/picsDreamTextDark"
+            android:textColorHint="@color/picsDreamTextLight"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/etState"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_weight="0.5"
+            android:hint="State"
+            android:inputType="textCapWords"
+            android:paddingBottom="16dp"
+            android:textColor="@color/picsDreamTextDark"
+            android:textColorHint="@color/picsDreamTextLight"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/etPincode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="Pincode"
+        android:inputType="number"
+        android:paddingBottom="16dp"
+        android:textColor="@color/picsDreamTextDark"
+        android:textColorHint="@color/picsDreamTextLight"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/etCountry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:enabled="false"
+        android:hint="Country"
+        android:inputType="number"
+        android:paddingBottom="16dp"
+        android:text="India"
+        android:textColor="@color/picsDreamTextDark"
+        android:textColorHint="@color/picsDreamTextLight"
+        android:textSize="14sp" />
+</LinearLayout>

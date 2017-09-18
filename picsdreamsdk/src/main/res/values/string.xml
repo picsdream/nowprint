@@ -1,0 +1,15 @@
+<resources>
+    <string name="error_unknown">An unknown error occurred.</string>
+    <string name="error_server_response">The server could not complete the request.</string>
+    <string name="error_response_malformed">Response from the server was not formatted correctly.</string>
+    <string name="format_error_server_message">Message: \"%s\"</string>
+    <string name="format_error_server_code">Code: \"%s\"</string>
+    <string name="error_network_error">Cannot connect to the Internet.</string>
+    <string name="share_via">Share Via</string>
+
+    <string name="font_family_condensed">sans-serif-condensed</string>
+    <string name="font_family_light">sans-serif-light</string>
+    <string name="font_family_regular">sans-serif-regular</string>
+    <string name="font_family_medium">sans-serif-medium</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+</resources>
