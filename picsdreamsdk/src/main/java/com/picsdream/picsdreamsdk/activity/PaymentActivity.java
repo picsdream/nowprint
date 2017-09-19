@@ -5,13 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
-import com.picsdream.picsdreamsdk.R;
+import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
 import com.picsdream.picsdreamsdk.payment.PaypalHelper;
 import com.picsdream.picsdreamsdk.payment.PaytmHelper;
@@ -27,7 +26,6 @@ import org.json.JSONException;
  */
 
 public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
-    private Toolbar toolbar;
     private PaytmChecsumView paytmChecsumView;
     final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_PRODUCTION;
     // note that these credentials will differ between live & sandbox environments.
@@ -40,7 +38,6 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
         super.onCreate(savedInstanceState);
         paytmChecsumView = this;
         setupUi();
-//        onPaymentCompleted();
     }
 
     @Override
@@ -50,12 +47,11 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
     }
 
     private void setupUi() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setupToolbar(toolbar);
-
         if (SharedPrefsUtil.getCountry().getCountry().equalsIgnoreCase("India")) {
+            ContextProvider.getInstance().trackEvent("Event", "Payment Init", "PayTm initialised");
             initPayTm();
         } else {
+            ContextProvider.getInstance().trackEvent("Event", "Payment Init", "PayPal initialised");
             initPayPal();
         }
     }
@@ -79,6 +75,7 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
 
     @Override
     public void onChecksumSuccess(String checksum) {
+        ContextProvider.getInstance().trackEvent("Event", "Checksum Generation", "Checksum success");
         InitialAppDataResponse initialAppDataResponse = SharedPrefsUtil.getInitialDataResponse();
         initialAppDataResponse.getGateways().getPaytm().getChecksum().setCheckSum(checksum);
         SharedPrefsUtil.setInitialDataResponse(initialAppDataResponse);
@@ -87,6 +84,7 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
 
     @Override
     public void onChecksumFailure() {
+        ContextProvider.getInstance().trackEvent("Event", "Checksum Generation", "Checksum error");
         onBackPressed();
     }
 
@@ -106,12 +104,14 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
                         Log.i(TAG, confirm.toJSONObject().toString(4));
                         Log.i(TAG, confirm.getPayment().toJSONObject().toString(4));
                         SaneToast.getToast("PaymentConfirmation info received from PayPal").show();
+                        ContextProvider.getInstance().trackEvent("Event", "Payment Success", "Paid with PayPal");
                         onPaymentCompleted();
                     } catch (JSONException e) {
                         onPaymentError();
                     }
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
+                ContextProvider.getInstance().trackEvent("Event", "Payment cancelled", "User cancelled PayPal");
                 SaneToast.getToast("Payment was cancelled").show();
             } else if (resultCode == com.paypal.android.sdk.payments.PaymentActivity.RESULT_EXTRAS_INVALID) {
                 onPaymentError();
@@ -128,5 +128,11 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
         Intent intent = new Intent(this, PurchaseActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         NavigationUtil.startActivity(this, intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ContextProvider.getInstance().trackScreenView("Payment");
     }
 }

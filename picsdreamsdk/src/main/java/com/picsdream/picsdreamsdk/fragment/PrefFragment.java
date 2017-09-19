@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.adapter.PrefsAdapter;
+import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.Item;
 import com.picsdream.picsdreamsdk.model.Medium;
 import com.picsdream.picsdreamsdk.model.Order;
@@ -108,12 +109,26 @@ public class PrefFragment extends BaseFragment {
         } else if (tag.equalsIgnoreCase(Constants.TAG_MEDIA)) {
             return "Select Media";
         } else if (tag.equalsIgnoreCase(Constants.TAG_SIZE)) {
-            return "Select Size";
+            return "Select Size (In inches)";
         }
         return "";
     }
 
     private void fetchItems() {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (tag != null) {
+            if (tag.equalsIgnoreCase(Constants.TAG_TYPE)) {
+                ContextProvider.getInstance().trackScreenView("Select Type");
+            } else if (tag.equalsIgnoreCase(Constants.TAG_MEDIA)) {
+                ContextProvider.getInstance().trackScreenView("Select Medium");
+            } else if (tag.equalsIgnoreCase(Constants.TAG_SIZE)) {
+                ContextProvider.getInstance().trackScreenView("Select Size");
+            }
+        }
     }
 }

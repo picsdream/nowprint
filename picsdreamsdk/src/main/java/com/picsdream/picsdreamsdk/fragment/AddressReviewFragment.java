@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.activity.AddressActivity;
+import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.request.Address;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 import com.picsdream.picsdreamsdk.util.Utils;
@@ -61,7 +62,14 @@ public class AddressReviewFragment extends BaseFragment implements View.OnClickL
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.tv_change) {
+            ContextProvider.getInstance().trackEvent("Click", "Change address", "Change address clicked");
             ((AddressActivity)getActivity()).setupAddressFragment(true);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ContextProvider.getInstance().trackScreenView("Review Address");
     }
 }

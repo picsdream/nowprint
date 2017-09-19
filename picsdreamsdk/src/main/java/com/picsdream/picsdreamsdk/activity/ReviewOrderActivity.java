@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.picsdream.picsdreamsdk.R;
+import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.Coupon;
 import com.picsdream.picsdreamsdk.model.Item;
 import com.picsdream.picsdreamsdk.model.Order;
@@ -36,7 +37,8 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
     private ViewGroup proceedLayout;
     private TextView tvChangeDiscount;
     private ImageView ivProductImage;
-    private TextView tvProductType, tvProductPrice, tvInitialPrice, tvDiscount, tvTax, tvPayableAmount, tvProductSize;
+    private TextView tvProductType, tvProductPrice, tvInitialPrice,
+            tvDiscount, tvTax, tvPayableAmount, tvProductSize, tvDeliveryDate;
     private String orderType, size, delivaryString;
     private int costBeforeTax, totalCost, discount, tax, finalCost;
     private InitialAppDataResponse initialAppDataResponse;
@@ -50,19 +52,20 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void setupUi() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        ivProductImage = (ImageView) findViewById(R.id.ivProductImage);
-        tvProductType = (TextView) findViewById(R.id.tvProductType);
-        tvProductPrice = (TextView) findViewById(R.id.tvProductPrice);
-        tvInitialPrice = (TextView) findViewById(R.id.tvInitialPrice);
-        tvDiscount = (TextView) findViewById(R.id.tvDiscount);
-        tvTax = (TextView) findViewById(R.id.tvTax);
-        tvPayableAmount = (TextView) findViewById(R.id.tvPayableAmount);
-        tvProductSize = (TextView) findViewById(R.id.tvProductSize);
-        tvChangeDiscount = (TextView) findViewById(R.id.tvChangeDiscount);
+        toolbar = findViewById(R.id.toolbar);
+        ivProductImage = findViewById(R.id.ivProductImage);
+        tvProductType = findViewById(R.id.tvProductType);
+        tvProductPrice = findViewById(R.id.tvProductPrice);
+        tvInitialPrice = findViewById(R.id.tvInitialPrice);
+        tvDiscount = findViewById(R.id.tvDiscount);
+        tvTax = findViewById(R.id.tvTax);
+        tvPayableAmount = findViewById(R.id.tvPayableAmount);
+        tvProductSize = findViewById(R.id.tvProductSize);
+        tvChangeDiscount = findViewById(R.id.tvChangeDiscount);
+        tvDeliveryDate = findViewById(R.id.tvDeliveryDate);
         setupToolbar(toolbar);
 
-        proceedLayout = (ViewGroup) findViewById(R.id.proceedLayout);
+        proceedLayout = findViewById(R.id.proceedLayout);
         proceedLayout.setOnClickListener(this);
 
         setOrderProperties(0f);
@@ -73,13 +76,14 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
         tvChangeDiscount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ContextProvider.getInstance().trackEvent("Click", "Promo", "Change promo clicked");
                 final BottomSheetDialog dialog = new BottomSheetDialog(ReviewOrderActivity.this);
                 dialog.setContentView(R.layout.view_bottomsheet);
                 dialog.show();
 
-                final EditText etPromoCode = (EditText) dialog.findViewById(R.id.etPromoCode);
-                LinearLayout applyPromoLayout = (LinearLayout) dialog.findViewById(R.id.applyPromoLayout);
-                final TextView tvPromoError = (TextView) dialog.findViewById(R.id.tvPromoError);
+                final EditText etPromoCode = dialog.findViewById(R.id.etPromoCode);
+                LinearLayout applyPromoLayout = dialog.findViewById(R.id.applyPromoLayout);
+                final TextView tvPromoError = dialog.findViewById(R.id.tvPromoError);
                 tvPromoError.setVisibility(View.GONE);
                 applyPromoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -96,10 +100,12 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
                                     validPromo = true;
                                     applyPromo(coupon);
                                     SaneToast.getToast("Promo applied").show();
+                                    ContextProvider.getInstance().trackEvent("Event", "Change Promo", "Promo Applied Success");
                                     dialog.dismiss();
                                 }
                             }
                         } else {
+                            ContextProvider.getInstance().trackEvent("Event", "Change Promo", "Promo Applied Error");
                             validPromo = false;
                         }
                         if (!validPromo) {
@@ -159,6 +165,7 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
         tvProductPrice.setText(Utils.getFormattedPrice(costBeforeTax));
         tvPayableAmount.setText(Utils.getFormattedPrice(finalCost));
         tvProductSize.setText(size);
+        tvDeliveryDate.setText(delivaryString);
     }
 
     private String getProductType(InitialAppDataResponse initialAppDataResponse, Order order) {
@@ -180,7 +187,7 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
     }
 
     private String getFormattedDeliveryDate(String delivery) {
-        return "";
+        return Utils.formatDeliveryDateString(delivery);
     }
 
     private int getInitialPriceByPercentage(float finalAmount, float discount) {
@@ -207,8 +214,15 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_help) {
+            ContextProvider.getInstance().trackEvent("Click", "Call button", "Call dialog shown from review order");
             Utils.initiateHelp(this);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ContextProvider.getInstance().trackScreenView("Review Order");
     }
 }

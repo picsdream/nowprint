@@ -2,13 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/Toolbar.TitleTextMasterLight"
+        app:titleTextAppearance="@style/Toolbar.TitleTextMasterLight"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="56dp" />
+
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:hint="Search for a country"
+        android:importantForAutofill="no"
+        android:inputType="textCapWords"
+        android:padding="16dp"
+        android:textColor="@color/picsDreamTextDark"
+        android:textColorHint="@color/picsDreamTextMedium"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f2f2f2" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvCountries"

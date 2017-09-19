@@ -43,9 +43,9 @@ android {
 
 dependencies {
     // Support
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:26.0.0'
+    compile 'com.android.support:design:26.0.0'
+    compile 'com.android.support:cardview-v7:26.0.0'
     // Image
     compile 'com.squareup.picasso:picasso:2.5.2'
     // Reactive
@@ -57,4 +57,6 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
 
     compile 'com.loopj.android:android-async-http:1.4.9'
+    compile 'com.google.android.gms:play-services-analytics:10.2.4'
 }
+//apply plugin: 'com.google.gms.google-services'

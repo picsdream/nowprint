@@ -19,10 +19,13 @@ import android.util.TypedValue;
 import android.view.View;
 
 import com.picsdream.picsdreamsdk.R;
+import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.Country;
 import com.picsdream.picsdreamsdk.model.Region;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -217,6 +220,7 @@ public class Utils {
                 .setPositiveButton("Call", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        ContextProvider.getInstance().trackEvent("Click", "Call button", "Call dialog confirmed");
                         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + contact));
                         context.startActivity(intent);
                         dialogInterface.dismiss();
@@ -225,8 +229,26 @@ public class Utils {
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        ContextProvider.getInstance().trackEvent("Click", "Call button", "Call dialog rejected");
                         dialogInterface.dismiss();
                     }
                 }).show();
+    }
+
+    public static String formatDeliveryDateString(String rawDeliveryDateString) {
+        int lowerDays = Integer.parseInt(rawDeliveryDateString.substring(0,1));
+        int higherDays = Integer.parseInt(rawDeliveryDateString.substring(2,3));
+        SimpleDateFormat df = new SimpleDateFormat("EEEE, dd MMM");
+
+        Calendar c = Calendar.getInstance();
+
+        c.add(Calendar.DAY_OF_MONTH, lowerDays);
+        String lowerDate = df.format(c.getTime());
+
+        c.add(Calendar.DAY_OF_MONTH, higherDays - lowerDays);
+        String higherDate = df.format(c.getTime());
+
+        String formattedDate = lowerDate + " - " + higherDate;
+        return formattedDate;
     }
 }

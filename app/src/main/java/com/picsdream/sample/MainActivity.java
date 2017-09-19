@@ -55,8 +55,9 @@ public class MainActivity extends BaseActivity {
     private void initializePicsDream(Uri uri) {
         PicsDream.getInstance()
                 .with(this)
-                .ImageUri(uri)
                 .returnBackActivity(MainActivity.class)
                 .initialize("app_key");
+        PicsDream.getInstance()
+                .ImageUri(uri).launch(this);
     }
 }

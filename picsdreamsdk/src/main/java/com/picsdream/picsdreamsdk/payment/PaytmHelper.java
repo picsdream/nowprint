@@ -7,6 +7,7 @@ import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPGService;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 import com.picsdream.picsdreamsdk.activity.PaymentActivity;
+import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.Order;
 import com.picsdream.picsdreamsdk.model.network.ChecksumResponse;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
@@ -105,6 +106,7 @@ public class PaytmHelper {
             @Override
             public void onTransactionResponse(Bundle bundle) {
                 if(bundle.getString("STATUS").equals("TXN_SUCCESS")) {
+                    ContextProvider.getInstance().trackEvent("Event", "Payment Success", "Paid with PayTm");
                     if (context instanceof PaymentActivity) {
                         ((PaymentActivity) context).onPaymentCompleted();
                         SaneToast.getToast("Success").show();
@@ -141,7 +143,8 @@ public class PaytmHelper {
             @Override
             public void onBackPressedCancelTransaction() {
                 context.finish();
-                SaneToast.getToast("User cancelled").show();
+                ContextProvider.getInstance().trackEvent("Event", "Payment cancelled", "User cancelled PayTm");
+                SaneToast.getToast("Payment cancelled").show();
             }
 
             @Override

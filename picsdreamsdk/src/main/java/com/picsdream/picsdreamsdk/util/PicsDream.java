@@ -18,9 +18,12 @@ public class PicsDream {
         return new PicsDream();
     }
 
-    public PicsDream initialize(String appKey) {
+    public void launch(Context context) {
         Intent intent = new Intent(context, InitialDataLoadActivity.class);
         NavigationUtil.startActivity(context, intent);
+    }
+
+    public PicsDream initialize(String appKey) {
         return this;
     }
 

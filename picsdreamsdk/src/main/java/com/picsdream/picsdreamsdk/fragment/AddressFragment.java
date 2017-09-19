@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.picsdream.picsdreamsdk.R;
+import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.request.Address;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 import com.picsdream.picsdreamsdk.util.ValidationUtil;
@@ -86,5 +87,11 @@ public class AddressFragment extends BaseFragment {
         this.etMobile = view.findViewById(R.id.etMobile);
         this.etEmail = view.findViewById(R.id.etEmail);
         this.etCountry = view.findViewById(R.id.etCountry);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ContextProvider.getInstance().trackScreenView("Enter Address");
     }
 }

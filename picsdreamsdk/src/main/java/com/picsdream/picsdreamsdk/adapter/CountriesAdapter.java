@@ -58,6 +58,11 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Pref
         });
     }
 
+    public void updateList(List<Country> list){
+        countryList = list;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return countryList.size();

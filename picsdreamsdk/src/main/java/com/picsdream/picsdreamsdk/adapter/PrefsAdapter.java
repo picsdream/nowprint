@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.activity.PrefsActivity;
+import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.Item;
 import com.picsdream.picsdreamsdk.model.Medium;
 import com.picsdream.picsdreamsdk.model.Order;
@@ -101,8 +102,19 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
             public void onClick(View view) {
                 setSelection(selectableItem);
                 notifyDataSetChanged();
+                trackSelectionEvent(selectableItem);
             }
         });
+    }
+
+    private void trackSelectionEvent(SelectableItem selectableItem) {
+        if (selectableItem instanceof Item) {
+            ContextProvider.getInstance().trackEvent("Click", "Selection item", "Type");
+        } else if (selectableItem instanceof Medium){
+            ContextProvider.getInstance().trackEvent("Click", "Selection item", "Medium");
+        } else if (selectableItem instanceof Price){
+            ContextProvider.getInstance().trackEvent("Click", "Selection item", "Size");
+        }
     }
 
     private void createAnOrder(SelectableItem selectableItem) {

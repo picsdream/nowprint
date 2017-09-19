@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.picsdream.picsdreamsdk.R;
+import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.fragment.AddressFragment;
 import com.picsdream.picsdreamsdk.fragment.AddressReviewFragment;
 import com.picsdream.picsdreamsdk.model.request.Address;
@@ -95,6 +96,7 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_help) {
+            ContextProvider.getInstance().trackEvent("Click", "Call button", "Call dialog shown from address");
             Utils.initiateHelp(this);
         }
         return super.onOptionsItemSelected(item);

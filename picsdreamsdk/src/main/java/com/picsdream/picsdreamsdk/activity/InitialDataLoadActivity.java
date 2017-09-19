@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.picsdream.picsdreamsdk.R;
+import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.Order;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
 import com.picsdream.picsdreamsdk.presenter.CouponPresenter;
@@ -85,5 +86,11 @@ public class InitialDataLoadActivity extends BaseActivity implements InitialData
     public void onDataFetchFailure() {
         finish();
         SaneToast.getToast("Failed").show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ContextProvider.getInstance().trackScreenView("Start Screen");
     }
 }
