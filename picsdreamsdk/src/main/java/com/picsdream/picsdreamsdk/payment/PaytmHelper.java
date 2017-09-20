@@ -106,7 +106,8 @@ public class PaytmHelper {
             @Override
             public void onTransactionResponse(Bundle bundle) {
                 if(bundle.getString("STATUS").equals("TXN_SUCCESS")) {
-                    ContextProvider.getInstance().trackEvent("Event", "Payment Success", "Paid with PayTm");
+                    ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(),
+                            "Paid with PayTM", "");
                     if (context instanceof PaymentActivity) {
                         ((PaymentActivity) context).onPaymentCompleted();
                         SaneToast.getToast("Success").show();
@@ -143,7 +144,8 @@ public class PaytmHelper {
             @Override
             public void onBackPressedCancelTransaction() {
                 context.finish();
-                ContextProvider.getInstance().trackEvent("Event", "Payment cancelled", "User cancelled PayTm");
+                ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(),
+                        "Payment cancelled", "User cancelled PayTm");
                 SaneToast.getToast("Payment cancelled").show();
             }
 

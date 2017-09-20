@@ -8,29 +8,39 @@ import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
 import com.picsdream.picsdreamsdk.util.AnalyticsTrackers;
 
+import io.intercom.android.sdk.Intercom;
+
 /**
  * Authored by vipulkumar on 02/09/17.
  */
 
-public class ContextProvider extends Application {
-    private static ContextProvider INSTANCE;
+public class ContextProvider {
+    private static Application APPLICATION;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        INSTANCE = this;
-        AnalyticsTrackers.initialize(this);
+    public static void initializeApplication(Application application) {
+        APPLICATION = application;
+
+        if (AnalyticsTrackers.getInstance() == null) {
+            AnalyticsTrackers.initialize(application);
+        }
         AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
+        initIntercom(application);
+    }
+
+    private static void initIntercom(Application application) {
+        Intercom.initialize(application, "android_sdk-af3ba9f907a65bd5166d23ad1c3aafe825984c9b", "l7wg2suf");
+        Intercom.client().registerUnidentifiedUser();
     }
 
     public ContextProvider() {
+
     }
 
-    public static ContextProvider getInstance() {
-        return INSTANCE;
+    public static Application getApplication() {
+        return APPLICATION;
     }
 
-    public synchronized Tracker getGoogleAnalyticsTracker() {
+    public static synchronized Tracker getGoogleAnalyticsTracker() {
         AnalyticsTrackers analyticsTrackers = AnalyticsTrackers.getInstance();
         return analyticsTrackers.get(AnalyticsTrackers.Target.APP);
     }
@@ -40,7 +50,7 @@ public class ContextProvider extends Application {
      *
      * @param screenName screen name to be displayed on GA dashboard
      */
-    public void trackScreenView(String screenName) {
+    public static void trackScreenView(String screenName) {
         Tracker t = getGoogleAnalyticsTracker();
 
         // Set screen name.
@@ -49,7 +59,7 @@ public class ContextProvider extends Application {
         // Send a screen view.
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
-        GoogleAnalytics.getInstance(this).dispatchLocalHits();
+        GoogleAnalytics.getInstance(getApplication()).dispatchLocalHits();
     }
 
     /***
@@ -57,13 +67,13 @@ public class ContextProvider extends Application {
      *
      * @param e exception to be tracked
      */
-    public void trackException(Exception e) {
+    public static void trackException(Exception e) {
         if (e != null) {
             Tracker t = getGoogleAnalyticsTracker();
 
             t.send(new HitBuilders.ExceptionBuilder()
                     .setDescription(
-                            new StandardExceptionParser(this, null)
+                            new StandardExceptionParser(getApplication(), null)
                                     .getDescription(Thread.currentThread().getName(), e))
                     .setFatal(false)
                     .build()
@@ -78,7 +88,7 @@ public class ContextProvider extends Application {
      * @param action   action of the event
      * @param label    label
      */
-    public void trackEvent(String category, String action, String label) {
+    public static void trackEvent(String category, String action, String label) {
         Tracker t = getGoogleAnalyticsTracker();
 
         // Build and send an Event.

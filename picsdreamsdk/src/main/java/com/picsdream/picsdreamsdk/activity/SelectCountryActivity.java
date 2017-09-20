@@ -85,6 +85,6 @@ public class SelectCountryActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ContextProvider.getInstance().trackScreenView("Select Country");
+        ContextProvider.trackScreenView("Select Country");
     }
 }

@@ -22,7 +22,7 @@ public class CouponPresenter {
     }
 
     public void getAvailableCoupons() {
-        Call<ResponseBody> call = RetrofitHandler.getApiService().getAvailableCoupons();
+        Call<ResponseBody> call = RetrofitHandler.getApiService().getAvailableCoupons(SharedPrefsUtil.getAppKey());
         RequestHandler.getInstance().createCall(couponView, call, new RequestHandler.RequestCallback() {
             @Override
             public void onSuccess(Object o) {

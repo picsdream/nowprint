@@ -95,10 +95,7 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_help) {
-            ContextProvider.getInstance().trackEvent("Click", "Call button", "Call dialog shown from address");
-            Utils.initiateHelp(this);
-        }
+        Utils.onHelpItemsClicked(item, this, "Address screen");
         return super.onOptionsItemSelected(item);
     }
 }

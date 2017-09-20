@@ -62,7 +62,7 @@ public class AddressReviewFragment extends BaseFragment implements View.OnClickL
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.tv_change) {
-            ContextProvider.getInstance().trackEvent("Click", "Change address", "Change address clicked");
+            ContextProvider.trackEvent(APP_KEY, "Change address", "");
             ((AddressActivity)getActivity()).setupAddressFragment(true);
         }
     }
@@ -70,6 +70,6 @@ public class AddressReviewFragment extends BaseFragment implements View.OnClickL
     @Override
     public void onResume() {
         super.onResume();
-        ContextProvider.getInstance().trackScreenView("Review Address");
+        ContextProvider.trackScreenView("Review Address");
     }
 }

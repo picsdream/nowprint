@@ -12,6 +12,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 /**
  * Created by vipul.kumar on 06-04-2017.
@@ -21,30 +22,17 @@ public interface NetworkService {
 
     @NonNull
     @GET(Constants.URL_INITIAL_APP_DATA)
-    Call<ResponseBody> getInitialAppData();
+    Call<ResponseBody> getInitialAppData(@Query("app_id") String appId);
 
     @NonNull
     @GET(Constants.URL_GET_AVAILABLE_COUPONS)
-    Call<ResponseBody> getAvailableCoupons();
+    Call<ResponseBody> getAvailableCoupons(@Query("app_id") String appId);
 
     @NonNull
     @POST(Constants.URL_GENERATE_PAYTM_CHECKSUM)
     Call<ResponseBody> generatePaytmChecksum(@Body ChecksumRequest checksumRequest);
-//
-//    @NonNull
-//    @POST(Constants.URL_POST_PURCHASE_ITEM)
-//    Call<ResponseBody> purchaseItem(@Body PurchaseRequest purchaseRequest);
 
     @NonNull
     @POST(Constants.URL_POST_PURCHASE_ITEM)
     Call<ResponseBody> purchaseItem(@Body HashMap<String, Object> purchaseRequest);
-
-    @NonNull
-    @POST(Constants.URL_POST_UPLOAD_PHOT0)
-    Call<ResponseBody> uploadPhoto(@Body HashMap<String, Object> uploadPhotoRequest);
-
-//    @NonNull
-//    @POST(Constants.URL_POST_UPLOAD_PHOT0)
-//    Call<ResponseBody> uploadPhoto(@Body RequestBody requestBody);
-
 }

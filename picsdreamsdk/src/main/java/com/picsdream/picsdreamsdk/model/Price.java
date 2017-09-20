@@ -11,7 +11,7 @@ public class Price extends SelectableItem {
     private String size;
     @SerializedName("price")
     @Expose
-    private Integer price;
+    private float price;
 
     public String getSize() {
         return size;
@@ -21,11 +21,11 @@ public class Price extends SelectableItem {
         this.size = size;
     }
 
-    public Integer getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 

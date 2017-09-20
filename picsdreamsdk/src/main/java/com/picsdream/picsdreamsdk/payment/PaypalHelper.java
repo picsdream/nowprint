@@ -37,6 +37,7 @@ public class PaypalHelper {
         Paypal paypal = SharedPrefsUtil.getInitialDataResponse().getGateways().getPaypal();
         return new PayPalConfiguration()
                 .environment(CONFIG_ENVIRONMENT)
+                .acceptCreditCards(false)
                 .clientId(paypal.getClientId());
     }
 }

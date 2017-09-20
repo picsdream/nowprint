@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.picsdream.picsdreamsdk.R;
+import com.picsdream.picsdreamsdk.activity.SizeGuideActivity;
 import com.picsdream.picsdreamsdk.adapter.PrefsAdapter;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.Item;
@@ -19,6 +20,7 @@ import com.picsdream.picsdreamsdk.model.Price;
 import com.picsdream.picsdreamsdk.model.SelectableItem;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
 import com.picsdream.picsdreamsdk.util.Constants;
+import com.picsdream.picsdreamsdk.util.NavigationUtil;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 import com.picsdream.picsdreamsdk.util.Utils;
 
@@ -31,7 +33,7 @@ import java.util.ArrayList;
 public class PrefFragment extends BaseFragment {
     private RecyclerView recyclerViewMedia;
     private ArrayList<SelectableItem> items;
-    private TextView tvLabel;
+    private TextView tvLabel, tvSizeGuide;
     private String tag;
 
     public static PrefFragment newInstance(String tag) {
@@ -56,19 +58,18 @@ public class PrefFragment extends BaseFragment {
     }
 
     private void setupUi(View view) {
-        items = getItemsByTag(tag);
-
+        tvSizeGuide = view.findViewById(R.id.tv_size_guide);
         tvLabel = view.findViewById(R.id.tv_label);
         recyclerViewMedia = view.findViewById(R.id.recycler_view_media);
+
+        initPerfs(tag);
+        items = getItemsByTag(tag);
+
         Utils.setRecyclerViewProperties(getContext(), recyclerViewMedia, LinearLayoutManager.HORIZONTAL);
         PrefsAdapter prefsAdapter = new PrefsAdapter(getContext(), items);
         recyclerViewMedia.setAdapter(prefsAdapter);
 
         tvLabel.setText(getFragmentLabel(tag));
-    }
-
-    private void showRegionsDialog() {
-
     }
 
     private ArrayList<SelectableItem> getItemsByTag(String tag) {
@@ -114,8 +115,20 @@ public class PrefFragment extends BaseFragment {
         return "";
     }
 
-    private void fetchItems() {
-
+    private void initPerfs(String tag) {
+        if (tag.equalsIgnoreCase(Constants.TAG_TYPE)) {
+            tvSizeGuide.setVisibility(View.GONE);
+        } else if (tag.equalsIgnoreCase(Constants.TAG_MEDIA)) {
+            tvSizeGuide.setVisibility(View.GONE);
+        } else if (tag.equalsIgnoreCase(Constants.TAG_SIZE)) {
+            tvSizeGuide.setVisibility(View.VISIBLE);
+            tvSizeGuide.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    NavigationUtil.startActivityWithClipReveal(getContext(), SizeGuideActivity.class, tvSizeGuide);
+                }
+            });
+        }
     }
 
     @Override
@@ -123,11 +136,11 @@ public class PrefFragment extends BaseFragment {
         super.onResume();
         if (tag != null) {
             if (tag.equalsIgnoreCase(Constants.TAG_TYPE)) {
-                ContextProvider.getInstance().trackScreenView("Select Type");
+                ContextProvider.trackScreenView("Select Type");
             } else if (tag.equalsIgnoreCase(Constants.TAG_MEDIA)) {
-                ContextProvider.getInstance().trackScreenView("Select Medium");
+                ContextProvider.trackScreenView("Select Medium");
             } else if (tag.equalsIgnoreCase(Constants.TAG_SIZE)) {
-                ContextProvider.getInstance().trackScreenView("Select Size");
+                ContextProvider.trackScreenView("Select Size");
             }
         }
     }

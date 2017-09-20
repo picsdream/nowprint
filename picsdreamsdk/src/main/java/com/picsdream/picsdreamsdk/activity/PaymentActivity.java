@@ -10,6 +10,7 @@ import android.util.Log;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
+import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
 import com.picsdream.picsdreamsdk.payment.PaypalHelper;
@@ -26,7 +27,6 @@ import org.json.JSONException;
  */
 
 public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
-    private PaytmChecsumView paytmChecsumView;
     final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_PRODUCTION;
     // note that these credentials will differ between live & sandbox environments.
     final int REQUEST_CODE_PAYMENT = 1;
@@ -36,8 +36,12 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        paytmChecsumView = this;
-        setupUi();
+        setContentView(R.layout.activity_payment);
+        if (SharedPrefsUtil.getSandboxMode()) {
+            onPaymentCompleted();
+        } else {
+            setupUi();
+        }
     }
 
     @Override
@@ -48,10 +52,10 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
 
     private void setupUi() {
         if (SharedPrefsUtil.getCountry().getCountry().equalsIgnoreCase("India")) {
-            ContextProvider.getInstance().trackEvent("Event", "Payment Init", "PayTm initialised");
+            ContextProvider.trackEvent(APP_KEY, "Payment Init PayTm", "");
             initPayTm();
         } else {
-            ContextProvider.getInstance().trackEvent("Event", "Payment Init", "PayPal initialised");
+            ContextProvider.trackEvent(APP_KEY, "Payment Init PayPal", "");
             initPayPal();
         }
     }
@@ -75,7 +79,7 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
 
     @Override
     public void onChecksumSuccess(String checksum) {
-        ContextProvider.getInstance().trackEvent("Event", "Checksum Generation", "Checksum success");
+        ContextProvider.trackEvent(APP_KEY, "Checksum Success", "");
         InitialAppDataResponse initialAppDataResponse = SharedPrefsUtil.getInitialDataResponse();
         initialAppDataResponse.getGateways().getPaytm().getChecksum().setCheckSum(checksum);
         SharedPrefsUtil.setInitialDataResponse(initialAppDataResponse);
@@ -84,7 +88,7 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
 
     @Override
     public void onChecksumFailure() {
-        ContextProvider.getInstance().trackEvent("Event", "Checksum Generation", "Checksum error");
+        ContextProvider.trackEvent(APP_KEY, "Checksum Error", "");
         onBackPressed();
     }
 
@@ -104,14 +108,15 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
                         Log.i(TAG, confirm.toJSONObject().toString(4));
                         Log.i(TAG, confirm.getPayment().toJSONObject().toString(4));
                         SaneToast.getToast("PaymentConfirmation info received from PayPal").show();
-                        ContextProvider.getInstance().trackEvent("Event", "Payment Success", "Paid with PayPal");
+                        ContextProvider.trackEvent(APP_KEY, "Paid with payPal", "");
                         onPaymentCompleted();
                     } catch (JSONException e) {
                         onPaymentError();
                     }
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                ContextProvider.getInstance().trackEvent("Event", "Payment cancelled", "User cancelled PayPal");
+                ContextProvider.trackEvent(APP_KEY, "Payment cancelled", "User cancelled PayPal");
+                PaymentActivity.this.finish();
                 SaneToast.getToast("Payment was cancelled").show();
             } else if (resultCode == com.paypal.android.sdk.payments.PaymentActivity.RESULT_EXTRAS_INVALID) {
                 onPaymentError();
@@ -121,6 +126,7 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
 
     private void onPaymentError() {
         SaneToast.getToast("Some error occurred. Please try again.").show();
+        PaymentActivity.this.finish();
     }
 
     public void onPaymentCompleted() {
@@ -133,6 +139,6 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
     @Override
     protected void onResume() {
         super.onResume();
-        ContextProvider.getInstance().trackScreenView("Payment");
+        ContextProvider.trackScreenView("Payment");
     }
 }

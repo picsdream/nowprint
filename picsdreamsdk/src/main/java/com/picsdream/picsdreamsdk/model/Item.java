@@ -14,6 +14,18 @@ public class Item extends SelectableItem {
     @SerializedName("name")
     @Expose
     private String name;
+
+    public String getImageThumb() {
+        return imageThumb;
+    }
+
+    public void setImageThumb(String imageThumb) {
+        this.imageThumb = imageThumb;
+    }
+
+    @SerializedName("img")
+    @Expose
+    private String imageThumb;
     @SerializedName("mediums")
     @Expose
     private List<Medium> mediums = null;

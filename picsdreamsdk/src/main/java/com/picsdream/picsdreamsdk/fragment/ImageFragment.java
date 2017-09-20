@@ -6,8 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
 import android.widget.ImageView;
 
 import com.picsdream.picsdreamsdk.R;
@@ -76,6 +74,7 @@ public class ImageFragment extends BaseFragment {
     }
 
     private void makeWoodFrame() {
+        ivImage.setAlpha(0.8f);
         getActivity().getLayoutInflater().inflate(R.layout.frame_wood, frameContainerBackground);
         changePadding(ivImage, 25);
     }
@@ -96,18 +95,19 @@ public class ImageFragment extends BaseFragment {
     }
 
     private void changePadding(final View view, final int padding) {
-        Animation a = new Animation() {
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                int newPadding = (int) (padding * interpolatedTime);
-                view.setPadding(newPadding, newPadding, newPadding, newPadding);
-            }
-        };
-        a.setDuration(300);
-        view.startAnimation(a);
+//        Animation a = new Animation() {
+//            @Override
+//            protected void applyTransformation(float interpolatedTime, Transformation t) {
+//            }
+//        };
+//        a.setDuration(300);
+//        view.startAnimation(a);
+        int newPadding = padding;
+        view.setPadding(newPadding, newPadding, newPadding, newPadding);
     }
 
     private void clearFrames() {
+        ivImage.setAlpha(1f);
         frameContainerBackground.removeAllViews();
         frameContainer.removeAllViews();
     }

@@ -16,18 +16,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.picsdream.picsdreamsdk.R;
+import com.picsdream.picsdreamsdk.activity.BaseActivity;
+import com.picsdream.picsdreamsdk.activity.EmailPhotoActivity;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.Country;
 import com.picsdream.picsdreamsdk.model.Region;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+
+import io.intercom.android.sdk.Intercom;
 
 /**
  * Authored by vipulkumar on 02/09/17.
@@ -170,13 +176,32 @@ public class Utils {
                 selectedRegion = region;
             }
         }
+
+        if (selectedRegion == null) {
+            for (Region region : regions) {
+                if (region.getName().equalsIgnoreCase("default")) {
+                    selectedRegion = region;
+                }
+            }
+        }
         SharedPrefsUtil.setRegion(selectedRegion);
         return selectedRegion;
     }
 
     public static String getFormattedPrice(float price) {
         Region region = SharedPrefsUtil.getRegion();
-        return region.getCurrency() + " " + Math.round(price * region.getConversion());
+        return region.getCurrency() + " " + price;
+    }
+
+    public static float getConvertedPrice(float price) {
+        Region region = SharedPrefsUtil.getRegion();
+        return  Utils.roundOffFloat(Math.round(price * region.getConversion()));
+    }
+
+    public static float roundOffFloat(float number) {
+        BigDecimal bd = new BigDecimal(Float.toString(number));
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
     }
 
     public static String generateOrderId() {
@@ -188,14 +213,14 @@ public class Utils {
         return sb.toString();
     }
 
-    public static int getDiscountedPrice(int price, int discountPer) {
-        return (int) (price - ((price * discountPer) / 100));
+    public static float getDiscountedPrice(float price, int discountPer) {
+        return Utils.roundOffFloat(price - ((price * discountPer) / 100));
     }
 
     public static int fetchAccentColor(Context context) {
         TypedValue typedValue = new TypedValue();
 
-        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorAccent });
+        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[]{R.attr.colorAccent});
         int color = a.getColor(0, 0);
 
         a.recycle();
@@ -205,22 +230,23 @@ public class Utils {
 
     public static int fetchPrimaryColor(Context context) {
         TypedValue typedValue = new TypedValue();
-        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorPrimary });
+        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[]{R.attr.colorPrimary});
         int color = a.getColor(0, 0);
         a.recycle();
 
         return color;
     }
 
-    public static void initiateHelp(final Context context) {
+    public static void intiateCall(final Context context) {
         InitialAppDataResponse initialAppDataResponse = SharedPrefsUtil.getInitialDataResponse();
         final String contact = initialAppDataResponse.getContact();
         new AlertDialog.Builder(context)
-                .setTitle("Would you like to call PicsDream Support?")
+                .setTitle("Would you like to call NowPrint Support?")
                 .setPositiveButton("Call", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        ContextProvider.getInstance().trackEvent("Click", "Call button", "Call dialog confirmed");
+                        ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(),
+                                "Call initiated", "Call dialog confirmed");
                         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + contact));
                         context.startActivity(intent);
                         dialogInterface.dismiss();
@@ -229,15 +255,17 @@ public class Utils {
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        ContextProvider.getInstance().trackEvent("Click", "Call button", "Call dialog rejected");
+                        ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(),
+                                "Call cancelled", "Call dialog cancel");
                         dialogInterface.dismiss();
                     }
                 }).show();
     }
 
     public static String formatDeliveryDateString(String rawDeliveryDateString) {
-        int lowerDays = Integer.parseInt(rawDeliveryDateString.substring(0,1));
-        int higherDays = Integer.parseInt(rawDeliveryDateString.substring(2,3));
+        String[] splitValues = rawDeliveryDateString.split("-");
+        int lowerDays = Integer.parseInt(splitValues[0]);
+        int higherDays = Integer.parseInt(splitValues[1]);
         SimpleDateFormat df = new SimpleDateFormat("EEEE, dd MMM");
 
         Calendar c = Calendar.getInstance();
@@ -250,5 +278,27 @@ public class Utils {
 
         String formattedDate = lowerDate + " - " + higherDate;
         return formattedDate;
+    }
+
+    public static void onHelpItemsClicked(MenuItem item, BaseActivity activity, String screen) {
+        if (item.getItemId() == R.id.menu_call) {
+            ContextProvider.trackEvent(activity.APP_KEY, "Call button", screen);
+            Utils.intiateCall(activity);
+        } else if (item.getItemId() == R.id.menu_email) {
+            ContextProvider.trackEvent(activity.APP_KEY, "Email button", screen);
+            onEmailClicked(activity);
+        } else if (item.getItemId() == R.id.menu_chat) {
+            ContextProvider.trackEvent(activity.APP_KEY, "Chat button", screen);
+            launchIntercom();
+        }
+    }
+
+    public static void launchIntercom() {
+        Intercom.client().setLauncherVisibility(Intercom.Visibility.GONE);
+        Intercom.client().displayConversationsList();
+    }
+
+    public static void onEmailClicked(Context context) {
+        NavigationUtil.startActivity(context, EmailPhotoActivity.class);
     }
 }

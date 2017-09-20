@@ -11,6 +11,7 @@ import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.Order;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
+import com.picsdream.picsdreamsdk.network.Error;
 import com.picsdream.picsdreamsdk.presenter.CouponPresenter;
 import com.picsdream.picsdreamsdk.presenter.InitialDataPresenter;
 import com.picsdream.picsdreamsdk.util.NavigationUtil;
@@ -64,6 +65,9 @@ public class InitialDataLoadActivity extends BaseActivity implements InitialData
     @Override
     public void onDataFetchSuccess(InitialAppDataResponse initialAppDataResponse) {
         SharedPrefsUtil.setInitialDataResponse(initialAppDataResponse);
+        if (initialAppDataResponse.getLive() == 0) {
+            SharedPrefsUtil.setSandboxMode(true);
+        }
         Order order = new Order();
         order.setId(Utils.generateOrderId());
         SharedPrefsUtil.saveOrder(order);
@@ -83,14 +87,14 @@ public class InitialDataLoadActivity extends BaseActivity implements InitialData
     }
 
     @Override
-    public void onDataFetchFailure() {
+    public void onDataFetchFailure(Error error) {
         finish();
-        SaneToast.getToast("Failed").show();
+        SaneToast.getToast(error.getErrorBody()).show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ContextProvider.getInstance().trackScreenView("Start Screen");
+        ContextProvider.trackScreenView("Start Screen");
     }
 }

@@ -5,8 +5,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.fragment.ImageFragment;
@@ -14,6 +17,9 @@ import com.picsdream.picsdreamsdk.fragment.PrefFragment;
 import com.picsdream.picsdreamsdk.model.SelectableItem;
 import com.picsdream.picsdreamsdk.util.Constants;
 import com.picsdream.picsdreamsdk.util.NavigationUtil;
+import com.picsdream.picsdreamsdk.util.SaneToast;
+import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
+import com.picsdream.picsdreamsdk.util.Utils;
 
 /**
  * Authored by vipulkumar on 28/08/17.
@@ -34,6 +40,9 @@ public class PrefsActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void setupUi() {
+        if (SharedPrefsUtil.getSandboxMode()) {
+            SaneToast.getToast("Running in sandbox mode", Toast.LENGTH_LONG).show();
+        }
         findViewByIds();
         setupToolbar(toolbar);
     }
@@ -87,5 +96,17 @@ public class PrefsActivity extends BaseActivity implements View.OnClickListener 
         if (view.getId() == R.id.proceedLayout) {
             onProceedLayoutClicked();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_help, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Utils.onHelpItemsClicked(item, this, "Pref Screen");
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,21 +1,21 @@
 package com.picsdream.picsdreamsdk.util;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
 import com.picsdream.picsdreamsdk.activity.InitialDataLoadActivity;
+import com.picsdream.picsdreamsdk.application.ContextProvider;
 
 /**
  * Authored by vipulkumar on 28/08/17.
  */
 
-public class PicsDream {
-    private Context context;
-    private Uri uri;
+public class NowPrint {
 
-    public static PicsDream getInstance() {
-        return new PicsDream();
+    public static NowPrint getInstance() {
+        return new NowPrint();
     }
 
     public void launch(Context context) {
@@ -23,32 +23,37 @@ public class PicsDream {
         NavigationUtil.startActivity(context, intent);
     }
 
-    public PicsDream initialize(String appKey) {
+    public NowPrint initialize(String appKey) {
+        SharedPrefsUtil.setAppKey(appKey);
         return this;
     }
 
-    public PicsDream with(Context context) {
-        this.context = context;
+    public NowPrint with(Application application) {
+        ContextProvider.initializeApplication(application);
         return this;
     }
 
-    public PicsDream ImageUri(Uri uri) {
-        this.uri = uri;
+    public NowPrint ImageUri(Uri uri) {
         SharedPrefsUtil.setImageUri(uri.toString());
         return this;
     }
 
-    public PicsDream returnBackActivity(Class<?> cls) {
+    public NowPrint returnBackActivity(Class<?> cls) {
         SharedPrefsUtil.setColorPrimary(cls.getName());
         return this;
     }
 
-//    public PicsDream colorPrimary(String colorPrimary) {
+    public NowPrint runInSandboxMode(boolean sandboxMode) {
+        SharedPrefsUtil.setSandboxMode(sandboxMode);
+        return this;
+    }
+
+//    public NowPrint colorPrimary(String colorPrimary) {
 //        SharedPrefsUtil.setColorPrimary(colorPrimary);
 //        return this;
 //    }
 //
-//    public PicsDream colorAccent(String colorAccent) {
+//    public NowPrint colorAccent(String colorAccent) {
 //        SharedPrefsUtil.setColorAccent(colorAccent);
 //        return this;
 //    }

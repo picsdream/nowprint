@@ -4,17 +4,17 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.picsdream.picsdreamsdk.activity.BaseActivity;
-import com.picsdream.picsdreamsdk.util.PicsDream;
+import com.picsdream.picsdreamsdk.util.NowPrint;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
 
 import java.util.List;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_CHOOSE = 200;
     private List<Uri> mSelected;
@@ -53,11 +53,13 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initializePicsDream(Uri uri) {
-        PicsDream.getInstance()
-                .with(this)
+        NowPrint.getInstance()
+                .with(this.getApplication())
                 .returnBackActivity(MainActivity.class)
-                .initialize("app_key");
-        PicsDream.getInstance()
+                .runInSandboxMode(false)
+                .initialize("43748398643785726");
+
+        NowPrint.getInstance()
                 .ImageUri(uri).launch(this);
     }
 }

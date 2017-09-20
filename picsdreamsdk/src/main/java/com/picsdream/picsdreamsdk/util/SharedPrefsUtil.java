@@ -37,7 +37,7 @@ public final class SharedPrefsUtil {
 
     @NonNull
     private static Context getContext() {
-        return ContextProvider.getInstance();
+        return ContextProvider.getApplication();
     }
 
     public static boolean getBoolean(String key, boolean defaultValue) {
@@ -126,6 +126,22 @@ public final class SharedPrefsUtil {
 
     public static String getColorPrimary() {
         return getString("colorPrimary", "#5533FF");
+    }
+
+    public static void setSandboxMode(boolean sandboxMode) {
+        setBoolean("sandbox", sandboxMode);
+    }
+
+    public static boolean getSandboxMode() {
+        return getBoolean("sandbox", true);
+    }
+
+    public static void setAppKey(String appKey) {
+        setString("appKey", appKey);
+    }
+
+    public static String getAppKey() {
+        return getString("appKey", "#");
     }
 
 

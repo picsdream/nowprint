@@ -4,6 +4,7 @@ import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
 import com.picsdream.picsdreamsdk.network.Error;
 import com.picsdream.picsdreamsdk.network.RequestHandler;
 import com.picsdream.picsdreamsdk.network.RetrofitHandler;
+import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 import com.picsdream.picsdreamsdk.view.InitialDataView;
 
 import okhttp3.ResponseBody;
@@ -22,7 +23,7 @@ public class InitialDataPresenter {
 
     public void getInitialAppData() {
         initialDataView.onStartLoading();
-        Call<ResponseBody> call = RetrofitHandler.getApiService().getInitialAppData();
+        Call<ResponseBody> call = RetrofitHandler.getApiService().getInitialAppData(SharedPrefsUtil.getAppKey());
         RequestHandler.getInstance().createCall(initialDataView, call, new RequestHandler.RequestCallback() {
             @Override
             public void onSuccess(Object o) {
@@ -36,7 +37,7 @@ public class InitialDataPresenter {
             @Override
             public void onFailure(Error error) {
                 initialDataView.onStopLoading();
-                initialDataView.onDataFetchFailure();
+                initialDataView.onDataFetchFailure(error);
             }
         }, InitialAppDataResponse.class);
     }

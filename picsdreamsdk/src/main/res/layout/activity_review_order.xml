@@ -161,6 +161,33 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/shippingLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/tvShippingLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@string/font_family_medium"
+                        android:text="Shipping"
+                        android:textColor="@color/picsDreamTextMedium"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvShipping"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@string/font_family_medium"
+                        android:gravity="right"
+                        android:text="$5"
+                        android:textColor="@color/picsDreamTextDark"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -243,7 +270,7 @@
             android:fontFamily="@string/font_family_medium"
             android:gravity="center"
             android:padding="@dimen/spacing_medium_2"
-            android:text="Next"
+            android:text="Checkout"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="@dimen/text_regular" />

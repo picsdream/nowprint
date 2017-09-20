@@ -92,6 +92,6 @@ public class AddressFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        ContextProvider.getInstance().trackScreenView("Enter Address");
+        ContextProvider.trackScreenView("Enter Address");
     }
 }

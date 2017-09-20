@@ -3,8 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_help"
-        android:icon="@drawable/ic_call_black_24dp"
-        android:title="Help"
+        android:id="@+id/menu_call"
+        android:icon="@drawable/ic_phone_call"
+        android:title="Call us"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_email"
+        android:icon="@drawable/ic_mail"
+        android:title="Email us"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_chat"
+        android:icon="@drawable/ic_speech_bubble"
+        android:title="Chat with us"
         app:showAsAction="always" />
 </menu>

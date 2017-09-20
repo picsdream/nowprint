@@ -1,7 +1,9 @@
 package com.picsdream.picsdreamsdk.adapter;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.Paint;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -57,44 +59,62 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
         InitialAppDataResponse initialAppDataResponse = SharedPrefsUtil.getInitialDataResponse();
 
         if (selectableItem instanceof Item) {
-            holder.tvSubLabel.setVisibility(View.INVISIBLE);
+            Picasso.with(context)
+                    .load(((Item) selectableItem).getImageThumb())
+                    .fit().centerCrop()
+                    .into(holder.ivImage);
+            holder.ivImage.setVisibility(View.VISIBLE);
             holder.tvLabel.setText(Utils.capitalizeFirstCharacterOfEveryWord(((Item) selectableItem).getName()));
-        } else if (selectableItem instanceof Medium) {
+            holder.tvLabel.setVisibility(View.VISIBLE);
             holder.tvSubLabel.setVisibility(View.INVISIBLE);
-            holder.tvLabel.setText(Utils.capitalizeFirstCharacterOfEveryWord(((Medium) selectableItem).getName()));
+            holder.tvLabelOnImage.setVisibility(View.INVISIBLE);
+        } else if (selectableItem instanceof Medium) {
+            holder.ivImage.setVisibility(View.INVISIBLE);
+            holder.tvLabel.setVisibility(View.INVISIBLE);
+            holder.tvSubLabel.setVisibility(View.INVISIBLE);
+            holder.tvLabelOnImage.setText(Utils.capitalizeFirstCharacterOfEveryWord(((Medium) selectableItem).getName()));
         } else if (selectableItem instanceof Price) {
+            holder.ivImage.setVisibility(View.INVISIBLE);
+            holder.tvLabel.setVisibility(View.VISIBLE);
             holder.tvSubLabel.setVisibility(View.VISIBLE);
-            float discountedPrice = Utils.getDiscountedPrice(((Price)selectableItem).getPrice(),
+            holder.tvLabelOnImage.setVisibility(View.VISIBLE);
+            holder.tvSubLabel.setPaintFlags(holder.tvSubLabel.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            float discountedPrice = Utils.getDiscountedPrice((int) ((Price) selectableItem).getPrice(),
                     initialAppDataResponse.getDis());
-            holder.tvSubLabel.setText(Utils.getFormattedPrice(discountedPrice));
-            holder.tvLabel.setText(Utils.capitalizeFirstCharacterOfEveryWord(((Price) selectableItem).getSize()));
+            holder.tvLabelOnImage.setText(((Price) selectableItem).getSize());
+            holder.tvSubLabel.setText(Utils.getFormattedPrice(
+                    Utils.getConvertedPrice(((Price) selectableItem).getPrice())));
+            holder.tvLabel.setText(Utils.getFormattedPrice(Utils.getConvertedPrice(discountedPrice)));
         }
-
-        Picasso.with(context)
-                .load(Uri.parse(SharedPrefsUtil.getImageUriString()))
-                .fit().centerCrop()
-                .into(holder.ivImage);
-        Picasso.with(context)
-                .load(Uri.parse(SharedPrefsUtil.getImageUriString()))
-                .fit().centerCrop()
-                .into(holder.ivImageAnim);
 
         initFrame(holder, selectableItem);
 
-        if (!selectableItem.isSelected()) {
-            holder.tvLabel.setTextColor(context.getResources().getColor(R.color.picsDreamTextLight));
-            holder.tvSubLabel.setTextColor(context.getResources().getColor(R.color.picsDreamTextLight));
-            holder.overlayView.setVisibility(View.VISIBLE);
-            holder.itemCard.setCardElevation(2f);
-            holder.ivImageAnim.setVisibility(View.INVISIBLE);
+        if (selectableItem instanceof Item) {
+            if (selectableItem.isSelected()) {
+                holder.overlayView.setVisibility(View.INVISIBLE);
+            } else {
+                holder.overlayView.setVisibility(View.VISIBLE);
+            }
         } else {
+            holder.overlayView.setVisibility(View.INVISIBLE);
+        }
+
+        if (selectableItem.isSelected()) {
             createAnOrder(selectableItem);
             postSelectionToActivity(selectableItem);
-            revealAnimation(holder.ivImageAnim);
             holder.tvLabel.setTextColor(context.getResources().getColor(R.color.picsDreamTextDark));
-            holder.tvSubLabel.setTextColor(Utils.fetchPrimaryColor(context));
-            holder.overlayView.setVisibility(View.VISIBLE);
+            holder.tvLabelOnImage.setTextColor(context.getResources().getColor(R.color.white));
+            holder.tvSubLabel.setTextColor(context.getResources().getColor(R.color.picsDreamTextMedium));
             holder.itemCard.setCardElevation(20f);
+            changeCardBackgroundColor(context.getResources().getColor(R.color.white),
+                    Utils.fetchPrimaryColor(context),
+                    holder.itemCard);
+        } else {
+            holder.tvLabel.setTextColor(context.getResources().getColor(R.color.picsDreamTextLight));
+            holder.tvSubLabel.setTextColor(context.getResources().getColor(R.color.picsDreamTextLight));
+            holder.tvLabelOnImage.setTextColor(context.getResources().getColor(R.color.picsDreamTextLight));
+            holder.itemCard.setCardElevation(5f);
+            holder.itemCard.setCardBackgroundColor(context.getResources().getColor(R.color.white));
         }
 
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
@@ -107,13 +127,27 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
         });
     }
 
+    private void changeCardBackgroundColor(int colorFrom, int colorTo, final CardView cardView) {
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+        colorAnimation.setDuration(100);
+        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                cardView.setCardBackgroundColor((int) animator.getAnimatedValue());
+            }
+
+        });
+        colorAnimation.start();
+    }
+
     private void trackSelectionEvent(SelectableItem selectableItem) {
         if (selectableItem instanceof Item) {
-            ContextProvider.getInstance().trackEvent("Click", "Selection item", "Type");
-        } else if (selectableItem instanceof Medium){
-            ContextProvider.getInstance().trackEvent("Click", "Selection item", "Medium");
-        } else if (selectableItem instanceof Price){
-            ContextProvider.getInstance().trackEvent("Click", "Selection item", "Size");
+            ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Type", ((Item) selectableItem).getName());
+        } else if (selectableItem instanceof Medium) {
+            ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Medium", ((Medium) selectableItem).getName());
+        } else if (selectableItem instanceof Price) {
+            ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Size", ((Price) selectableItem).getSize());
         }
     }
 
@@ -121,11 +155,11 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
         Order order = SharedPrefsUtil.getOrder();
         if (selectableItem instanceof Item) {
             order.setType(((Item) selectableItem).getType());
-        } else if (selectableItem instanceof Medium){
+        } else if (selectableItem instanceof Medium) {
             order.setMedium(((Medium) selectableItem).getName());
-        } else if (selectableItem instanceof Price){
+        } else if (selectableItem instanceof Price) {
             order.setSize(((Price) selectableItem).getSize());
-            order.setTotalCost(((Price) selectableItem).getPrice());
+            order.setTotalCost(Utils.getConvertedPrice(((Price) selectableItem).getPrice()));
         }
         SharedPrefsUtil.saveOrder(order);
     }
@@ -182,12 +216,11 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
     static class PrefViewHolder extends RecyclerView.ViewHolder {
         ViewGroup rootLayout;
         ImageView ivImage;
-        ImageView ivImageAnim;
         TextView tvLabel;
+        TextView tvLabelOnImage;
         TextView tvSubLabel;
         CardView itemCard;
         View overlayView;
-        ViewGroup frameContainer;
 
         private PrefViewHolder(@NonNull View view) {
             super(view);
@@ -197,12 +230,11 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
         private void findViewById(@NonNull View view) {
             rootLayout = view.findViewById(R.id.root_layout);
             ivImage = view.findViewById(R.id.iv_image);
-            ivImageAnim = view.findViewById(R.id.iv_image_anim);
             tvLabel = view.findViewById(R.id.tv_label);
+            tvLabelOnImage = view.findViewById(R.id.tv_label_on_image);
             tvSubLabel = view.findViewById(R.id.tv_sub_label);
             itemCard = view.findViewById(R.id.item_card);
             overlayView = view.findViewById(R.id.overlay_view);
-            frameContainer = view.findViewById(R.id.frame_container);
         }
     }
 }

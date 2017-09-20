@@ -22,7 +22,7 @@ public class Order {
     private String currency;
     @SerializedName("total_cost")
     @Expose
-    private int totalCost;
+    private float totalCost;
     @SerializedName("discount")
     @Expose
     private String discount;
@@ -35,6 +35,18 @@ public class Order {
     @SerializedName("total_paid")
     @Expose
     private String totalPaid;
+
+    public String getShipping() {
+        return shipping;
+    }
+
+    public void setShipping(String shipping) {
+        this.shipping = shipping;
+    }
+
+    @SerializedName("shipping")
+    @Expose
+    private String shipping;
     private int costBeforeTax;
 
     public String getId() {
@@ -77,11 +89,11 @@ public class Order {
         this.currency = currency;
     }
 
-    public int getTotalCost() {
+    public float getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(int totalCost) {
+    public void setTotalCost(float totalCost) {
         this.totalCost = totalCost;
     }
 

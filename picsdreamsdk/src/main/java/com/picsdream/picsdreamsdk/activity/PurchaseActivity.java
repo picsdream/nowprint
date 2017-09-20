@@ -32,9 +32,13 @@ public class PurchaseActivity extends BaseActivity implements PurchaseView, View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_purchase);
-        purchasePresenter = new PurchasePresenter(this);
         initUi();
-        makePurchaseCall();
+        if (SharedPrefsUtil.getSandboxMode()) {
+            onUploadPhotoSuccess(null);
+        } else {
+            purchasePresenter = new PurchasePresenter(this);
+            makePurchaseCall();
+        }
     }
 
     private void makePurchaseCall() {
@@ -74,11 +78,11 @@ public class PurchaseActivity extends BaseActivity implements PurchaseView, View
         loadingLayout.setVisibility(View.GONE);
         retryLayout.setVisibility(View.VISIBLE);
         SaneToast.getToast("Some error occurred. Please try again").show();
-        ContextProvider.getInstance().trackEvent("Event", "Create order failure", "Create order failed");
+        ContextProvider.trackEvent(APP_KEY, "Create order failure", "");
         retryLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ContextProvider.getInstance().trackEvent("Click", "Create order retry", "Create order failed");
+                ContextProvider.trackEvent(APP_KEY, "Create order retry", "");
                 makePurchaseCall();
             }
         });
@@ -86,7 +90,7 @@ public class PurchaseActivity extends BaseActivity implements PurchaseView, View
 
     @Override
     public void onPurchaseSuccess() {
-        ContextProvider.getInstance().trackEvent("Event", "Purchase Success", "Order created");
+        ContextProvider.trackEvent(APP_KEY, "Create order Success", "");
     }
 
     @Override
@@ -94,19 +98,19 @@ public class PurchaseActivity extends BaseActivity implements PurchaseView, View
         loadingLayout.setVisibility(View.GONE);
         confirmationLayout.setVisibility(View.VISIBLE);
         retryLayout.setVisibility(View.GONE);
-        ContextProvider.getInstance().trackEvent("Event", "Photo Upload Success", "Photo uploaded");
+        ContextProvider.trackEvent(APP_KEY, "Photo Upload Success", "");
     }
 
     @Override
     public void onUploadPhotoFailure(final PurchaseResponse purchaseResponse) {
         loadingLayout.setVisibility(View.GONE);
         retryLayout.setVisibility(View.VISIBLE);
-        ContextProvider.getInstance().trackEvent("Event", "Photo Upload Failure", "Photo upload failed");
+        ContextProvider.trackEvent(APP_KEY, "Photo Upload Failure", "");
         SaneToast.getToast("Some error occurred. Please try again").show();
         retryLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ContextProvider.getInstance().trackEvent("Click", "Photo Upload Retry", "Photo upload failed");
+                ContextProvider.trackEvent(APP_KEY, "Photo Upload Retry", "");
                 makeUploadPhotoCall(purchaseResponse);
             }
         });
@@ -121,18 +125,18 @@ public class PurchaseActivity extends BaseActivity implements PurchaseView, View
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 NavigationUtil.startActivity(PurchaseActivity.this, intent);
 
-                ContextProvider.getInstance().trackEvent("Click", "Continue clicked", "Purchase complete");
+                ContextProvider.trackEvent(APP_KEY, "Purchase complete", "Continue button clicked");
 
             } catch (ClassNotFoundException ignored) {
             }
         } else if (view.getId() == R.id.tvHelp) {
-            Utils.initiateHelp(PurchaseActivity.this);
+            Utils.intiateCall(PurchaseActivity.this);
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ContextProvider.getInstance().trackScreenView("Process order");
+        ContextProvider.trackScreenView("Process order");
     }
 }

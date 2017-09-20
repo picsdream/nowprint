@@ -6,12 +6,24 @@ import com.google.gson.annotations.SerializedName;
 import com.picsdream.picsdreamsdk.model.Country;
 import com.picsdream.picsdreamsdk.model.Item;
 import com.picsdream.picsdreamsdk.model.Region;
+import com.picsdream.picsdreamsdk.model.ShippingText;
 import com.picsdream.picsdreamsdk.model.payment.Gateways;
 
 import java.util.List;
 
 public class InitialAppDataResponse {
 
+    public Integer getLive() {
+        return live;
+    }
+
+    public void setLive(Integer live) {
+        this.live = live;
+    }
+
+    @SerializedName("live")
+    @Expose
+    private Integer live;
     @SerializedName("dis")
     @Expose
     private Integer dis;
@@ -42,6 +54,30 @@ public class InitialAppDataResponse {
     @SerializedName("countries")
     @Expose
     private List<Country> countries = null;
+
+    public List<ShippingText> getShippingTexts() {
+        return shippingTexts;
+    }
+
+    public void setShippingTexts(List<ShippingText> shippingTexts) {
+        this.shippingTexts = shippingTexts;
+    }
+
+    @SerializedName("shipping_text")
+    @Expose
+    private List<ShippingText> shippingTexts = null;
+
+    public List<String> getSizeGuideSizes() {
+        return sizeGuideSizes;
+    }
+
+    public void setSizeGuideSizes(List<String> sizeGuideSizes) {
+        this.sizeGuideSizes = sizeGuideSizes;
+    }
+
+    @SerializedName("size_guide")
+    @Expose
+    private List<String> sizeGuideSizes = null;
 
     public Integer getDis() {
         return dis;

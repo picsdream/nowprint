@@ -13,6 +13,18 @@ public class Country {
     @Expose
     private String continent;
 
+    public int getShipping() {
+        return shipping;
+    }
+
+    public void setShipping(int shipping) {
+        this.shipping = shipping;
+    }
+
+    @SerializedName("shipping")
+    @Expose
+    private int shipping;
+
     public String getCountry() {
         return country;
     }

@@ -15,10 +15,12 @@ import android.widget.TextView;
 
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
+import com.picsdream.picsdreamsdk.model.Country;
 import com.picsdream.picsdreamsdk.model.Coupon;
 import com.picsdream.picsdreamsdk.model.Item;
 import com.picsdream.picsdreamsdk.model.Order;
 import com.picsdream.picsdreamsdk.model.Region;
+import com.picsdream.picsdreamsdk.model.ShippingText;
 import com.picsdream.picsdreamsdk.model.network.CouponsResponse;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
 import com.picsdream.picsdreamsdk.util.NavigationUtil;
@@ -28,6 +30,7 @@ import com.picsdream.picsdreamsdk.util.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
 /**
  * Authored by vipulkumar on 29/08/17.
  */
@@ -38,9 +41,9 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
     private TextView tvChangeDiscount;
     private ImageView ivProductImage;
     private TextView tvProductType, tvProductPrice, tvInitialPrice,
-            tvDiscount, tvTax, tvPayableAmount, tvProductSize, tvDeliveryDate;
-    private String orderType, size, delivaryString;
-    private int costBeforeTax, totalCost, discount, tax, finalCost;
+            tvDiscount, tvTax, tvPayableAmount, tvProductSize, tvDeliveryDate, tvShipping, tvShippingLabel;
+    private String orderType, size, deliveryString;
+    private float costBeforeTax, totalCost, discount, tax, finalCost, shipping;
     private InitialAppDataResponse initialAppDataResponse;
 
     @Override
@@ -63,6 +66,8 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
         tvProductSize = findViewById(R.id.tvProductSize);
         tvChangeDiscount = findViewById(R.id.tvChangeDiscount);
         tvDeliveryDate = findViewById(R.id.tvDeliveryDate);
+        tvShipping = findViewById(R.id.tvShipping);
+        tvShippingLabel = findViewById(R.id.tvShippingLabel);
         setupToolbar(toolbar);
 
         proceedLayout = findViewById(R.id.proceedLayout);
@@ -76,7 +81,7 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
         tvChangeDiscount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ContextProvider.getInstance().trackEvent("Click", "Promo", "Change promo clicked");
+                ContextProvider.trackEvent(APP_KEY, "Change promo", "");
                 final BottomSheetDialog dialog = new BottomSheetDialog(ReviewOrderActivity.this);
                 dialog.setContentView(R.layout.view_bottomsheet);
                 dialog.show();
@@ -100,12 +105,12 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
                                     validPromo = true;
                                     applyPromo(coupon);
                                     SaneToast.getToast("Promo applied").show();
-                                    ContextProvider.getInstance().trackEvent("Event", "Change Promo", "Promo Applied Success");
+                                    ContextProvider.trackEvent(APP_KEY, "Promo applied", "");
                                     dialog.dismiss();
                                 }
                             }
                         } else {
-                            ContextProvider.getInstance().trackEvent("Event", "Change Promo", "Promo Applied Error");
+                            ContextProvider.trackEvent(APP_KEY, "Wrong coupon code", "");
                             validPromo = false;
                         }
                         if (!validPromo) {
@@ -128,6 +133,8 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
             discountPer = initialAppDataResponse.getDis();
         }
 
+        shipping = Utils.getConvertedPrice(getShipping());
+
         totalCost = order.getTotalCost();
         discount = getDiscount(totalCost, discountPer);
         costBeforeTax = Utils.getDiscountedPrice(totalCost, (int) discountPer);
@@ -137,9 +144,10 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
 
         tax = (costBeforeTax * region.getNum()) / 100;
 
-        finalCost = getPayablePrice(costBeforeTax, tax);
+        finalCost = getPayablePrice(costBeforeTax, tax, shipping);
 
-        delivaryString = getFormattedDeliveryDate(initialAppDataResponse.getDelivery());
+        deliveryString = getFormattedDeliveryDate(initialAppDataResponse.getDelivery());
+
 
         order.setSize(String.valueOf(size));
         order.setCurrency(region.getCurrency());
@@ -148,9 +156,35 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
         order.setTax(String.valueOf(tax));
         order.setTotalCost(totalCost);
         order.setTotalPaid(String.valueOf(finalCost));
+        order.setShipping(String.valueOf(shipping));
         SharedPrefsUtil.saveOrder(order);
 
         setValues();
+    }
+
+    private int getShipping() {
+        Country currentCountry = SharedPrefsUtil.getCountry();
+        for (Country country : initialAppDataResponse.getCountries()) {
+            if (currentCountry.getCountry().equalsIgnoreCase(country.getCountry())) {
+                return country.getShipping();
+            }
+        }
+        return 0;
+    }
+
+    private String getShippingLabel() {
+        Country currentCountry = SharedPrefsUtil.getCountry();
+        for (ShippingText shippingText : initialAppDataResponse.getShippingTexts()) {
+            if (currentCountry.getCountry().equalsIgnoreCase(shippingText.getName())) {
+                return shippingText.getText();
+            }
+        }
+        for (ShippingText shippingText : initialAppDataResponse.getShippingTexts()) {
+            if (shippingText.getName().equalsIgnoreCase("default")) {
+                return shippingText.getText();
+            }
+        }
+        return "shipping";
     }
 
     private void setValues() {
@@ -162,10 +196,12 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
         tvInitialPrice.setText(Utils.getFormattedPrice(totalCost));
         tvDiscount.setText(" - " + Utils.getFormattedPrice(discount));
         tvTax.setText(Utils.getFormattedPrice(tax));
+        tvShipping.setText(Utils.getFormattedPrice(shipping));
+        tvShippingLabel.setText(getShippingLabel());
         tvProductPrice.setText(Utils.getFormattedPrice(costBeforeTax));
         tvPayableAmount.setText(Utils.getFormattedPrice(finalCost));
         tvProductSize.setText(size);
-        tvDeliveryDate.setText(delivaryString);
+        tvDeliveryDate.setText(deliveryString);
     }
 
     private String getProductType(InitialAppDataResponse initialAppDataResponse, Order order) {
@@ -182,20 +218,16 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
         return "";
     }
 
-    private int getPayablePrice(float finalPrice, float tax) {
-        return (int) (finalPrice + tax);
+    private float getPayablePrice(float finalPrice, float tax, float shipping) {
+        return Utils.roundOffFloat(finalPrice + tax + shipping);
     }
 
     private String getFormattedDeliveryDate(String delivery) {
         return Utils.formatDeliveryDateString(delivery);
     }
 
-    private int getInitialPriceByPercentage(float finalAmount, float discount) {
-        return (int) ((finalAmount * 100) / (100 - discount));
-    }
-
-    private int getDiscount(float initialPrice, float discount) {
-        return (int) ((initialPrice * discount) / 100);
+    private float getDiscount(float initialPrice, float discount) {
+        return Utils.roundOffFloat((initialPrice * discount) / 100);
     }
 
     @Override
@@ -213,16 +245,13 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_help) {
-            ContextProvider.getInstance().trackEvent("Click", "Call button", "Call dialog shown from review order");
-            Utils.initiateHelp(this);
-        }
+        Utils.onHelpItemsClicked(item, this, "Review Order");
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ContextProvider.getInstance().trackScreenView("Review Order");
+        ContextProvider.trackScreenView("Review Order");
     }
 }

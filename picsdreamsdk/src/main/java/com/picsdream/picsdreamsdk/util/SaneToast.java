@@ -18,13 +18,13 @@ public final class SaneToast {
 
     public static Toast getToast() {
         if (SANE_TOAST == null) {
-            SANE_TOAST = new Toast(ContextProvider.getInstance());
+            SANE_TOAST = new Toast(ContextProvider.getApplication());
         }
         return SANE_TOAST;
     }
 
     public static Toast getToast(final String message) {
-        LayoutInflater inflater = LayoutInflater.from(ContextProvider.getInstance());
+        LayoutInflater inflater = LayoutInflater.from(ContextProvider.getApplication());
         View layout = inflater.inflate(R.layout.widget_toast, null);
         TextView text = layout.findViewById(R.id.tv_toast_msg);
         text.setText(message);

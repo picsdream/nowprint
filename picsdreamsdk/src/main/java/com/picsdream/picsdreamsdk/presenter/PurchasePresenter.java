@@ -71,6 +71,7 @@ public class PurchasePresenter {
         Address address = SharedPrefsUtil.getAddress();
 
         RequestParams params = new RequestParams();
+        params.put("app_id", SharedPrefsUtil.getAppKey());
         params.put("email", address.getEmail());
         params.put("order_no", purchaseResponse.getOrderNo());
         params.put("invoice_id", purchaseResponse.getInvoiceId());
@@ -107,18 +108,18 @@ public class PurchasePresenter {
         });
     }
 
-    private File[] getFilesArray() {
+    public static File[] getFilesArray() {
 //        File file = new File(Uri.parse(SharedPrefsUtil.getImageUriString()).getPath());
         Bitmap bmp = null;
 //        = BitmapFactory.decodeFile(Uri.parse(SharedPrefsUtil.getImageUriString()).getPath());
         try {
-            bmp = MediaStore.Images.Media.getBitmap(ContextProvider.getInstance()
+            bmp = MediaStore.Images.Media.getBitmap(ContextProvider.getApplication()
                     .getContentResolver(), Uri.parse(SharedPrefsUtil.getImageUriString()));
         } catch (IOException e) {
             e.printStackTrace();
         }
         String filename = "Picsdream_MOM_" + "xx" + ".jpg";
-        File cacheFile = new File(ContextProvider.getInstance().getCacheDir(), filename);
+        File cacheFile = new File(ContextProvider.getApplication().getCacheDir(), filename);
         try {
             FileOutputStream fos = new FileOutputStream(cacheFile.getAbsolutePath());
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
@@ -128,7 +129,7 @@ public class PurchasePresenter {
             Log.e("asd", "Error when saving image to cache. ", e);
             e.printStackTrace();
         }
-        Uri uri = Uri.parse(ContextProvider.getInstance().getCacheDir() + "/" + filename);
+        Uri uri = Uri.parse(ContextProvider.getApplication().getCacheDir() + "/" + filename);
 
         ArrayList<File> fileArrayList = new ArrayList<>();
         fileArrayList.add(new File(uri.getPath()));
@@ -161,6 +162,7 @@ public class PurchasePresenter {
         String itemsJson = new Gson().toJson(orderItems);
 
         HashMap<String, Object> params = new HashMap<>();
+        params.put("app_id", SharedPrefsUtil.getAppKey());
         params.put("items", itemsJson);
         params.put("currency", order.getCurrency());
         params.put("addr", addressJson);
@@ -169,6 +171,7 @@ public class PurchasePresenter {
         params.put("total_cost", order.getTotalCost());
         params.put("discount", order.getDiscount());
         params.put("tax", order.getTax());
+        params.put("shipping", order.getShipping());
         params.put("total_paid", order.getFinalCost());
         params.put("title", order.getType() + " " + order.getMedium() + " " + order.getSize());
 
