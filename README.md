@@ -5,16 +5,7 @@ Grab the SDK via Gradle
 
 
     compile 'com.addazz.picsdream:nowprint:1.0.0'
-
-Or Maven
-
-
-    <dependency>
-      <groupId>com.addazz.picsdream</groupId>
-      <artifactId>nowprint</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-
+    
 
 Get an instance of the SDK and initialise. Appropriate place to initialise the SDK is the onCreate() method of your Application class
 
