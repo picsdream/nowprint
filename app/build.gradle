@@ -17,9 +17,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    dexOptions {
+        jumboMode = true
+    }
 }
 
 dependencies {
-    compile project(':picsdreamsdk')
+    compile project(':OrderPrint')
     compile 'com.zhihu.android:matisse:0.4.3'
 }
