@@ -4,7 +4,7 @@ The Now Print SDK provides the world’s first mobile SDK to print creative imag
 Grab the SDK via Gradle
 
 
-    compile 'com.addazz.picsdream:nowprint:1.0.0'
+    compile 'com.addazz.orderprint:OrderPrint:1.0.0'
     
 
 Get an instance of the SDK and initialise. Appropriate place to initialise the SDK is the onCreate() method of your Application class
