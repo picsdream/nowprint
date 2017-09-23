@@ -9,12 +9,12 @@ Grab the SDK via Gradle
 
 Please note that starting from Support version 26.0.0, you have to add this line in your supported repositories
 
-`repositories {
+``repositories {
     jcenter()
     maven {
         url "https://maven.google.com"
     }
-}`
+}``
 
 Get an instance of the SDK and initialise. Appropriate place to initialise the SDK is the onCreate() method of your Application class
 
