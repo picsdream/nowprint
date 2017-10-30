@@ -1,26 +1,40 @@
 package com.picsdream.picsdreamsdk.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.activity.AddressActivity;
+import com.picsdream.picsdreamsdk.activity.PaymentActivity;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
+import com.picsdream.picsdreamsdk.model.CodResponse;
 import com.picsdream.picsdreamsdk.model.request.Address;
+import com.picsdream.picsdreamsdk.network.Error;
+import com.picsdream.picsdreamsdk.presenter.CodPresenter;
+import com.picsdream.picsdreamsdk.util.NavigationUtil;
+import com.picsdream.picsdreamsdk.util.SaneToast;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 import com.picsdream.picsdreamsdk.util.Utils;
+import com.picsdream.picsdreamsdk.view.CodView;
 
 /**
  * Authored by vipulkumar on 28/08/17.
  */
 
-public class AddressReviewFragment extends BaseFragment implements View.OnClickListener {
+public class AddressReviewFragment extends BaseFragment implements View.OnClickListener, CodView {
     private TextView tvChangeAddress;
     private TextView tvFullName, tvAddress;
+    private CodPresenter codPresenter;
+    private ProgressBar progressBar;
+    private ViewGroup paymentLayout;
+    private TextView tvPayOnline;
+    private ViewGroup payCodLayout, payOnlineLayout;
 
     public static AddressReviewFragment newInstance() {
         Bundle args = new Bundle();
@@ -42,7 +56,16 @@ public class AddressReviewFragment extends BaseFragment implements View.OnClickL
         tvFullName = view.findViewById(R.id.tvFullName);
         tvAddress = view.findViewById(R.id.tvAddress);
         tvChangeAddress.setOnClickListener(this);
+        progressBar = view.findViewById(R.id.progressBar);
+        paymentLayout = view.findViewById(R.id.paymentLayout);
+        payCodLayout = view.findViewById(R.id.payCodLayout);
+        payOnlineLayout = view.findViewById(R.id.payOnlineLayout);
+        tvPayOnline = view.findViewById(R.id.tvPayOnlineHeading);
+        paymentLayout.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+        codPresenter = new CodPresenter(this);
 
+        codPresenter.isCodAvailable();
         setValues();
     }
 
@@ -71,5 +94,56 @@ public class AddressReviewFragment extends BaseFragment implements View.OnClickL
     public void onResume() {
         super.onResume();
         ContextProvider.trackScreenView("Review Address");
+    }
+
+    @Override
+    public void onStartLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onStopLoading() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onCodSuccess(CodResponse codResponse) {
+        paymentLayout.setVisibility(View.VISIBLE);
+        if (SharedPrefsUtil.getCountry().getCountry().equalsIgnoreCase("India")) {
+            ContextProvider.trackEvent(APP_KEY, "Payment Init PayTm", "");
+            tvPayOnline.setText("Pay with PayTm");
+        } else {
+            ContextProvider.trackEvent(APP_KEY, "Payment Init PayPal", "");
+            tvPayOnline.setText("Pay with PayPal");
+        }
+
+        if (codResponse.getEnabled() == 1) {
+            payCodLayout.setVisibility(View.VISIBLE);
+        } else {
+            payCodLayout.setVisibility(View.GONE);
+        }
+
+        payOnlineLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PaymentActivity.class);
+                intent.putExtra("isCod", false);
+                NavigationUtil.startActivity(getContext(), intent);
+            }
+        });
+
+        payCodLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PaymentActivity.class);
+                intent.putExtra("isCod", true);
+                NavigationUtil.startActivity(getContext(), intent);
+            }
+        });
+    }
+
+    @Override
+    public void onCodFailure(Error error) {
+        SaneToast.getToast(error.getErrorBody()).show();
     }
 }

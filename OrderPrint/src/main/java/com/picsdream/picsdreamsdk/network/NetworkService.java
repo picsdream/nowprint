@@ -35,4 +35,8 @@ public interface NetworkService {
     @NonNull
     @POST(Constants.URL_POST_PURCHASE_ITEM)
     Call<ResponseBody> purchaseItem(@Body HashMap<String, Object> purchaseRequest);
+
+    @NonNull
+    @GET(Constants.URL_IS_COD_AVAILABLE)
+    Call<ResponseBody> isCodAvailable(@Query("email") String email, @Query("mobile") String mobile);
 }

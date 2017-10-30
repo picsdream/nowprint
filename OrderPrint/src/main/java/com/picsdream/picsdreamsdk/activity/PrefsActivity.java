@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.fragment.ImageFragment;
@@ -17,8 +16,6 @@ import com.picsdream.picsdreamsdk.fragment.PrefFragment;
 import com.picsdream.picsdreamsdk.model.SelectableItem;
 import com.picsdream.picsdreamsdk.util.Constants;
 import com.picsdream.picsdreamsdk.util.NavigationUtil;
-import com.picsdream.picsdreamsdk.util.SaneToast;
-import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 import com.picsdream.picsdreamsdk.util.Utils;
 
 /**
@@ -36,13 +33,10 @@ public class PrefsActivity extends BaseActivity implements View.OnClickListener 
         setContentView(R.layout.activity_prefs);
         setupUi();
         setupImageFragment();
-        setupPrefFragment(Constants.TAG_TYPE);
+        setupPrefFragment(getIntent().getStringExtra("tag"));
     }
 
     private void setupUi() {
-        if (SharedPrefsUtil.getSandboxMode()) {
-            SaneToast.getToast("Running in sandbox mode", Toast.LENGTH_LONG).show();
-        }
         findViewByIds();
         setupToolbar(toolbar);
     }
@@ -56,7 +50,7 @@ public class PrefsActivity extends BaseActivity implements View.OnClickListener 
     private void setupPrefFragment(String tag) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
                 .add(R.id.prefs_fragment_container, PrefFragment.newInstance(tag), tag);
-        if (!tag.equalsIgnoreCase(Constants.TAG_TYPE)) {
+        if (!tag.equalsIgnoreCase(Constants.TAG_MEDIA)) {
             transaction.addToBackStack("");
         }
         transaction.setCustomAnimations(R.anim.anim_fade_in, R.anim.anim_fade_out);
@@ -64,8 +58,8 @@ public class PrefsActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void findViewByIds() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        proceedLayout = (ViewGroup) findViewById(R.id.proceedLayout);
+        toolbar = findViewById(R.id.toolbar);
+        proceedLayout = findViewById(R.id.proceedLayout);
 
         proceedLayout.setOnClickListener(this);
     }

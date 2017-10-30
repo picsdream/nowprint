@@ -7,24 +7,27 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.picsdream.picsdreamsdk.R;
-import com.picsdream.picsdreamsdk.activity.ProductsActivity;
-import com.picsdream.picsdreamsdk.model.Country;
+import com.picsdream.picsdreamsdk.activity.PrefsActivity;
+import com.picsdream.picsdreamsdk.model.Item;
+import com.picsdream.picsdreamsdk.model.Order;
+import com.picsdream.picsdreamsdk.util.Constants;
 import com.picsdream.picsdreamsdk.util.NavigationUtil;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
-import com.picsdream.picsdreamsdk.util.Utils;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.PrefViewHolder>
+public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.PrefViewHolder>
         implements View.OnClickListener {
-    private List<Country> countryList;
+    private List<Item> productsList;
     private Context context;
 
-    public CountriesAdapter(Context context, List<Country> countryList) {
-        this.countryList = countryList;
+    public ProductsAdapter(Context context, List<Item> productsList) {
+        this.productsList = productsList;
         this.context = context;
     }
 
@@ -32,7 +35,7 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Pref
     @Override
     public PrefViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_country, parent, false);
+                .inflate(R.layout.item_product, parent, false);
 
         return new PrefViewHolder(itemView);
     }
@@ -43,29 +46,32 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Pref
     }
 
     private void setValues(final PrefViewHolder holder) {
-        final Country country = countryList.get(holder.getAdapterPosition());
-        holder.tvCountryName.setText(country.getCountry());
-        holder.tvContinentName.setText(country.getContinent());
+        final Item product = productsList.get(holder.getAdapterPosition());
+        holder.tvProductType.setText(product.getName());
+        Picasso.with(context)
+                .load(product.getImageThumb())
+                .into(holder.ivImage);
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPrefsUtil.setCountry(country);
-                Utils.setRegionAfterCountry();
-                Intent intent = new Intent(context, ProductsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Order order = SharedPrefsUtil.getOrder();
+                order.setType(product.getType());
+                SharedPrefsUtil.saveOrder(order);
+                Intent intent = new Intent(context, PrefsActivity.class);
+                intent.putExtra("tag", Constants.TAG_MEDIA);
                 NavigationUtil.startActivity(context, intent);
             }
         });
     }
 
-    public void updateList(List<Country> list){
-        countryList = list;
+    public void updateList(List<Item> list){
+        productsList = list;
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return countryList.size();
+        return productsList.size();
     }
 
     /**
@@ -80,7 +86,8 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Pref
 
     static class PrefViewHolder extends RecyclerView.ViewHolder {
         ViewGroup rootLayout;
-        TextView tvCountryName, tvContinentName;
+        TextView tvProductType;
+        ImageView ivImage;
 
         private PrefViewHolder(@NonNull View view) {
             super(view);
@@ -89,8 +96,8 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Pref
 
         private void findViewById(@NonNull View view) {
             rootLayout = view.findViewById(R.id.root_layout);
-            tvCountryName = view.findViewById(R.id.tvCountryName);
-            tvContinentName = view.findViewById(R.id.tvContinentName);
+            tvProductType = view.findViewById(R.id.tvItemType);
+            ivImage = view.findViewById(R.id.ivImage);
         }
     }
 }

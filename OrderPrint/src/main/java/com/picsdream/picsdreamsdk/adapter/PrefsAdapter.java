@@ -2,6 +2,7 @@ package com.picsdream.picsdreamsdk.adapter;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
 import android.os.Build;
@@ -54,6 +55,7 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
         setValues(holder);
     }
 
+    @SuppressLint("SetTextI18n")
     private void setValues(final PrefViewHolder holder) {
         final SelectableItem selectableItem = itemsList.get(holder.getAdapterPosition());
         InitialAppDataResponse initialAppDataResponse = SharedPrefsUtil.getInitialDataResponse();
@@ -69,9 +71,20 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
             holder.tvSubLabel.setVisibility(View.INVISIBLE);
             holder.tvLabelOnImage.setVisibility(View.INVISIBLE);
         } else if (selectableItem instanceof Medium) {
-            holder.ivImage.setVisibility(View.INVISIBLE);
-            holder.tvLabel.setVisibility(View.INVISIBLE);
-            holder.tvSubLabel.setVisibility(View.INVISIBLE);
+            if (((Medium) selectableItem).getImg() != null) {
+                Picasso.with(context)
+                        .load(((Medium) selectableItem).getImg())
+                        .fit().centerCrop()
+                        .into(holder.ivImage);
+                holder.ivImage.setVisibility(View.VISIBLE);
+                holder.tvLabel.setVisibility(View.INVISIBLE);
+                holder.tvSubLabel.setVisibility(View.INVISIBLE);
+                holder.tvLabelOnImage.setVisibility(View.INVISIBLE);
+            } else {
+                holder.ivImage.setVisibility(View.INVISIBLE);
+                holder.tvLabel.setVisibility(View.INVISIBLE);
+                holder.tvSubLabel.setVisibility(View.INVISIBLE);
+            }
             holder.tvLabelOnImage.setText(Utils.capitalizeFirstCharacterOfEveryWord(((Medium) selectableItem).getName()));
         } else if (selectableItem instanceof Price) {
             holder.ivImage.setVisibility(View.INVISIBLE);
@@ -89,7 +102,8 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
 
         initFrame(holder, selectableItem);
 
-        if (selectableItem instanceof Item) {
+        if (selectableItem instanceof Item ||
+                (selectableItem instanceof Medium && ((Medium) selectableItem).getImg() != null)) {
             if (selectableItem.isSelected()) {
                 holder.overlayView.setVisibility(View.INVISIBLE);
             } else {
@@ -125,6 +139,17 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
                 trackSelectionEvent(selectableItem);
             }
         });
+    }
+
+    private Item getSelectedItemType() {
+        InitialAppDataResponse initialAppDataResponse = SharedPrefsUtil.getInitialDataResponse();
+        Order order = SharedPrefsUtil.getOrder();
+        for (Item item : initialAppDataResponse.getItems()) {
+            if (item.getType().equalsIgnoreCase(order.getType())) {
+                return item;
+            }
+        }
+        return null;
     }
 
     private void changeCardBackgroundColor(int colorFrom, int colorTo, final CardView cardView) {

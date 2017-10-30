@@ -7,6 +7,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
 import com.picsdream.picsdreamsdk.util.AnalyticsTrackers;
+import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 
 import io.intercom.android.sdk.Intercom;
 
@@ -51,15 +52,17 @@ public class ContextProvider {
      * @param screenName screen name to be displayed on GA dashboard
      */
     public static void trackScreenView(String screenName) {
-        Tracker t = getGoogleAnalyticsTracker();
+        if (!SharedPrefsUtil.getSandboxMode()) {
+            Tracker t = getGoogleAnalyticsTracker();
 
-        // Set screen name.
-        t.setScreenName(screenName);
+            // Set screen name.
+            t.setScreenName(screenName);
 
-        // Send a screen view.
-        t.send(new HitBuilders.ScreenViewBuilder().build());
+            // Send a screen view.
+            t.send(new HitBuilders.ScreenViewBuilder().build());
 
-        GoogleAnalytics.getInstance(getApplication()).dispatchLocalHits();
+            GoogleAnalytics.getInstance(getApplication()).dispatchLocalHits();
+        }
     }
 
     /***
@@ -89,10 +92,11 @@ public class ContextProvider {
      * @param label    label
      */
     public static void trackEvent(String category, String action, String label) {
-        Tracker t = getGoogleAnalyticsTracker();
+        if (!SharedPrefsUtil.getSandboxMode()) {
+            Tracker t = getGoogleAnalyticsTracker();
 
-        // Build and send an Event.
-        t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
+            // Build and send an Event.
+            t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
+        }
     }
-
 }

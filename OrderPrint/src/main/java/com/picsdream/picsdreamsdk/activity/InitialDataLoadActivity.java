@@ -40,8 +40,8 @@ public class InitialDataLoadActivity extends BaseActivity implements InitialData
         couponPresenter = new CouponPresenter(this);
         couponPresenter.getAvailableCoupons();
 
-        loadingLayout = (ViewGroup) findViewById(R.id.loading_layout);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        loadingLayout = findViewById(R.id.loading_layout);
+        toolbar = findViewById(R.id.toolbar);
         setupToolbar(toolbar);
 
         initialDataPresenter.getInitialAppData();
@@ -71,16 +71,21 @@ public class InitialDataLoadActivity extends BaseActivity implements InitialData
         Order order = new Order();
         order.setId(Utils.generateOrderId());
         SharedPrefsUtil.saveOrder(order);
-        checkActivityRoute();
+        checkActivityRoute(initialAppDataResponse);
     }
 
-    private void checkActivityRoute() {
+    private void checkActivityRoute(InitialAppDataResponse initialAppDataResponse) {
+        if (initialAppDataResponse.getCountries().size() == 1) {
+            SharedPrefsUtil.setCountry(initialAppDataResponse.getCountries().get(0));
+            Utils.setRegionAfterCountry();
+        }
+
         if (SharedPrefsUtil.getCountry() == null) {
             Intent intent = new Intent(this, SelectCountryActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             NavigationUtil.startActivity(this, intent);
         } else {
-            Intent intent = new Intent(this, PrefsActivity.class);
+            Intent intent = new Intent(this, ProductsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             NavigationUtil.startActivity(this, intent);
         }

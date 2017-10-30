@@ -1,55 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@string/font_family_regular"
-            android:text="Delivering to"
-            android:textColor="@color/picsDreamTextMedium"
-            android:textSize="14sp" />
+            android:orientation="vertical"
+            android:padding="24dp">
 
-        <TextView
-            android:id="@+id/tvFullName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:fontFamily="@string/font_family_medium"
-            android:lineSpacingExtra="4dp"
-            android:text="Vipul Kumar"
-            android:textColor="@color/picsDreamTextDark"
-            android:textSize="18sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@string/font_family_regular"
+                android:text="Delivering to"
+                android:textColor="@color/picsDreamTextMedium"
+                android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/tvAddress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@string/font_family_medium"
-            android:lineSpacingExtra="4dp"
-            android:text="House no. 1041, Sector 43, DLF Phase 5\nNear Rainbow Apartments\nGurgaon, Haryana\n8826935439"
-            android:textColor="@color/picsDreamTextMedium"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tvFullName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@string/font_family_medium"
+                android:lineSpacingExtra="4dp"
+                android:text="Vipul Kumar"
+                android:textColor="@color/picsDreamTextDark"
+                android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/tv_change"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginTop="12dp"
-            android:fontFamily="@string/font_family_medium"
-            android:padding="12dp"
-            android:text="Change Address"
-            android:textColor="?colorPrimary"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tvAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@string/font_family_medium"
+                android:lineSpacingExtra="4dp"
+                android:text="House no. 1041, Sector 43, DLF Phase 5\nNear Rainbow Apartments\nGurgaon, Haryana\n8826935439"
+                android:textColor="@color/picsDreamTextMedium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@string/font_family_medium"
+                android:padding="12dp"
+                android:text="Change Address"
+                android:textColor="?colorPrimary"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <LinearLayout
+                android:id="@+id/paymentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/spacing_medium_3"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/payOnlineLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_bg_review_item"
+                    android:padding="@dimen/spacing_medium">
+
+                    <TextView
+                        android:id="@+id/tvPayOnlineHeading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@string/font_family_medium"
+                        android:text="Pay Using PayTm"
+                        android:textColor="@color/picsDreamTextDark" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:tint="?colorPrimary"
+                        app:srcCompat="@drawable/ic_chevron_right_black_24dp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/payCodLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_medium_3"
+                    android:background="@drawable/shape_bg_review_item"
+                    android:padding="@dimen/spacing_medium">
+
+                    <TextView
+                        android:id="@+id/tvPayCodHeading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@string/font_family_medium"
+                        android:text="Pay Cash On Delivery"
+                        android:textColor="@color/picsDreamTextDark" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:tint="?colorPrimary"
+                        app:srcCompat="@drawable/ic_chevron_right_black_24dp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

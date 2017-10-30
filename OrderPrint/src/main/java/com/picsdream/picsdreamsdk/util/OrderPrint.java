@@ -12,48 +12,50 @@ import com.picsdream.picsdreamsdk.application.ContextProvider;
  * Authored by vipulkumar on 28/08/17.
  */
 
-public class NowPrint {
+public class OrderPrint {
 
-    public static NowPrint getInstance() {
-        return new NowPrint();
+    public static OrderPrint getInstance() {
+        return new OrderPrint();
     }
 
     public void launch(Context context) {
+        ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "SDK Launched", "");
         Intent intent = new Intent(context, InitialDataLoadActivity.class);
         NavigationUtil.startActivity(context, intent);
     }
 
-    public NowPrint initialize(String appKey) {
+    public OrderPrint initialize(String appKey) {
         SharedPrefsUtil.setAppKey(appKey);
+        ContextProvider.trackEvent(appKey, "SDK Initialised", "");
         return this;
     }
 
-    public NowPrint with(Application application) {
+    public OrderPrint with(Application application) {
         ContextProvider.initializeApplication(application);
         return this;
     }
 
-    public NowPrint ImageUri(Uri uri) {
+    public OrderPrint ImageUri(Uri uri) {
         SharedPrefsUtil.setImageUri(uri.toString());
         return this;
     }
 
-    public NowPrint returnBackActivity(Class<?> cls) {
+    public OrderPrint returnBackActivity(Class<?> cls) {
         SharedPrefsUtil.setColorPrimary(cls.getName());
         return this;
     }
 
-    public NowPrint runInSandboxMode(boolean sandboxMode) {
+    public OrderPrint runInSandboxMode(boolean sandboxMode) {
         SharedPrefsUtil.setSandboxMode(sandboxMode);
         return this;
     }
 
-//    public NowPrint colorPrimary(String colorPrimary) {
+//    public OrderPrint colorPrimary(String colorPrimary) {
 //        SharedPrefsUtil.setColorPrimary(colorPrimary);
 //        return this;
 //    }
 //
-//    public NowPrint colorAccent(String colorAccent) {
+//    public OrderPrint colorAccent(String colorAccent) {
 //        SharedPrefsUtil.setColorAccent(colorAccent);
 //        return this;
 //    }

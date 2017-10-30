@@ -16,7 +16,6 @@ import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.Item;
 import com.picsdream.picsdreamsdk.model.Medium;
 import com.picsdream.picsdreamsdk.model.Order;
-import com.picsdream.picsdreamsdk.model.Price;
 import com.picsdream.picsdreamsdk.model.SelectableItem;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
 import com.picsdream.picsdreamsdk.util.Constants;
@@ -31,7 +30,6 @@ import java.util.ArrayList;
  */
 
 public class PrefFragment extends BaseFragment {
-    private RecyclerView recyclerViewMedia;
     private ArrayList<SelectableItem> items;
     private TextView tvLabel, tvSizeGuide;
     private String tag;
@@ -60,7 +58,7 @@ public class PrefFragment extends BaseFragment {
     private void setupUi(View view) {
         tvSizeGuide = view.findViewById(R.id.tv_size_guide);
         tvLabel = view.findViewById(R.id.tv_label);
-        recyclerViewMedia = view.findViewById(R.id.recycler_view_media);
+        RecyclerView recyclerViewMedia = view.findViewById(R.id.recycler_view_media);
 
         initPerfs(tag);
         items = getItemsByTag(tag);
@@ -77,15 +75,11 @@ public class PrefFragment extends BaseFragment {
         InitialAppDataResponse initialAppDataResponse = SharedPrefsUtil.getInitialDataResponse();
         Order order = SharedPrefsUtil.getOrder();
         if (tag.equalsIgnoreCase(Constants.TAG_TYPE)) {
-            for (Item item : initialAppDataResponse.getItems()) {
-                items.add(item);
-            }
+            items.addAll(initialAppDataResponse.getItems());
         } else if (tag.equalsIgnoreCase(Constants.TAG_MEDIA)) {
             for (Item item : initialAppDataResponse.getItems()) {
                 if (item.getType().equalsIgnoreCase(order.getType())) {
-                    for (Medium medium : item.getMediums()) {
-                        items.add(medium);
-                    }
+                    items.addAll(item.getMediums());
                 }
             }
         } else if (tag.equalsIgnoreCase(Constants.TAG_SIZE)) {
@@ -93,9 +87,7 @@ public class PrefFragment extends BaseFragment {
                 if (item.getType().equalsIgnoreCase(order.getType())) {
                     for (Medium medium : item.getMediums()) {
                         if (medium.getName().equalsIgnoreCase(order.getMedium()))
-                        for (Price price : medium.getPrices()) {
-                            items.add(price);
-                        }
+                            items.addAll(medium.getPrices());
                     }
                 }
             }
@@ -104,13 +96,28 @@ public class PrefFragment extends BaseFragment {
         return items;
     }
 
+    private Item getSelectedItem() {
+        InitialAppDataResponse initialAppDataResponse = SharedPrefsUtil.getInitialDataResponse();
+        Order order = SharedPrefsUtil.getOrder();
+        for (Item item : initialAppDataResponse.getItems()) {
+            if (item.getType().equalsIgnoreCase(order.getType())) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     private String getFragmentLabel(String tag) {
         if (tag.equalsIgnoreCase(Constants.TAG_TYPE)) {
             return "Select Type";
         } else if (tag.equalsIgnoreCase(Constants.TAG_MEDIA)) {
-            return "Select Media";
+            return getSelectedItem().getMediaHeading();
         } else if (tag.equalsIgnoreCase(Constants.TAG_SIZE)) {
-            return "Select Size (In inches)";
+            if (!getSelectedItem().getSizeUnit().equalsIgnoreCase("")) {
+                return getSelectedItem().getSizeHeading() + " (" + getSelectedItem().getSizeUnit() + ")";
+            } else {
+                return getSelectedItem().getSizeHeading();
+            }
         }
         return "";
     }

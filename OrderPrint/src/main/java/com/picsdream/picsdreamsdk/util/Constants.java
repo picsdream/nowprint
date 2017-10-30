@@ -6,6 +6,7 @@ public interface Constants {
     String URL_GENERATE_PAYTM_CHECKSUM =
             "paytm/generate";
     String URL_POST_PURCHASE_ITEM = "purchase";
+    String URL_IS_COD_AVAILABLE = "purchase/is-cod";
     String URL_POST_UPLOAD_PHOT0 = "pi";
     String BASE_URL = "https://www.picsdream.com/api/v1/";
 

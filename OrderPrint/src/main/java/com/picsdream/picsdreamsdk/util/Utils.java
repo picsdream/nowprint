@@ -241,7 +241,7 @@ public class Utils {
         InitialAppDataResponse initialAppDataResponse = SharedPrefsUtil.getInitialDataResponse();
         final String contact = initialAppDataResponse.getContact();
         new AlertDialog.Builder(context)
-                .setTitle("Would you like to call NowPrint Support?")
+                .setTitle("Would you like to call OrderPrint Support?")
                 .setPositiveButton("Call", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

@@ -19,6 +19,7 @@
         <activity android:name=".activity.PaymentActivity"/>
         <activity android:name=".activity.SelectCountryActivity"/>
         <activity android:name=".activity.PrefsActivity"/>
+        <activity android:name=".activity.ProductsActivity"/>
         <activity android:name=".activity.PurchaseActivity"/>
         <activity android:name=".activity.SizeGuideActivity"/>
         <activity android:name=".activity.EmailPhotoActivity"

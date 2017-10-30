@@ -11,6 +11,9 @@ public class Medium extends SelectableItem {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("img")
+    @Expose
+    private String img;
     @SerializedName("prices")
     @Expose
     private List<Price> prices = null;
@@ -31,4 +34,11 @@ public class Medium extends SelectableItem {
         this.prices = prices;
     }
 
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 }

@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.picsdream.picsdreamsdk.R;
-import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.fragment.AddressFragment;
 import com.picsdream.picsdreamsdk.fragment.AddressReviewFragment;
 import com.picsdream.picsdreamsdk.model.request.Address;
@@ -50,12 +49,14 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void setupAddressReviewFragment() {
+        proceedLayout.setVisibility(View.GONE);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, AddressReviewFragment.newInstance())
                 .commit();
     }
 
     public void setupAddressFragment(boolean addToBackStack) {
+        proceedLayout.setVisibility(View.VISIBLE);
         FragmentTransaction transition = getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, AddressFragment.newInstance());
         if (addToBackStack) {
@@ -65,8 +66,8 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void setupUi() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        proceedLayout = (ViewGroup) findViewById(R.id.proceedLayout);
+        toolbar = findViewById(R.id.toolbar);
+        proceedLayout = findViewById(R.id.proceedLayout);
         setupToolbar(toolbar);
 
         proceedLayout.setOnClickListener(this);

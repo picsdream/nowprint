@@ -155,7 +155,6 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
         order.setDiscount(String.valueOf(discount));
         order.setTax(String.valueOf(tax));
         order.setTotalCost(totalCost);
-        order.setTotalPaid(String.valueOf(finalCost));
         order.setShipping(String.valueOf(shipping));
         SharedPrefsUtil.saveOrder(order);
 

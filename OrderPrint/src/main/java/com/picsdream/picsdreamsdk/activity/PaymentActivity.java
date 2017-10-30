@@ -12,6 +12,7 @@ import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
+import com.picsdream.picsdreamsdk.model.Order;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
 import com.picsdream.picsdreamsdk.payment.PaypalHelper;
 import com.picsdream.picsdreamsdk.payment.PaytmHelper;
@@ -32,6 +33,7 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
     final int REQUEST_CODE_PAYMENT = 1;
     String TAG = "Tag";
     PayPalConfiguration config;
+    private boolean isCod;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,12 +53,17 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
     }
 
     private void setupUi() {
-        if (SharedPrefsUtil.getCountry().getCountry().equalsIgnoreCase("India")) {
-            ContextProvider.trackEvent(APP_KEY, "Payment Init PayTm", "");
-            initPayTm();
+        isCod = getIntent().getBooleanExtra("isCod", false);
+        if (isCod) {
+            onPaymentCompleted();
         } else {
-            ContextProvider.trackEvent(APP_KEY, "Payment Init PayPal", "");
-            initPayPal();
+            if (SharedPrefsUtil.getCountry().getCountry().equalsIgnoreCase("India")) {
+                ContextProvider.trackEvent(APP_KEY, "Payment Init PayTm", "");
+                initPayTm();
+            } else {
+                ContextProvider.trackEvent(APP_KEY, "Payment Init PayPal", "");
+                initPayPal();
+            }
         }
     }
 
@@ -131,6 +138,13 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
 
     public void onPaymentCompleted() {
         finish();
+        Order order = SharedPrefsUtil.getOrder();
+        if (isCod) {
+            order.setTotalPaid(String.valueOf(0));
+        } else {
+            order.setTotalPaid(String.valueOf(order.getFinalCost()));
+        }
+        SharedPrefsUtil.saveOrder(order);
         Intent intent = new Intent(this, PurchaseActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         NavigationUtil.startActivity(this, intent);

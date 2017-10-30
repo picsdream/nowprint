@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.picsdream.picsdreamsdk.util.NowPrint;
+import com.picsdream.picsdreamsdk.util.OrderPrint;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
@@ -53,13 +53,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializePicsDream(Uri uri) {
-        NowPrint.getInstance()
+        OrderPrint.getInstance()
                 .with(this.getApplication())
                 .returnBackActivity(MainActivity.class)
                 .runInSandboxMode(false)
                 .initialize("43748398643785726");
 
-        NowPrint.getInstance()
+        OrderPrint.getInstance()
                 .ImageUri(uri).launch(this);
     }
 }

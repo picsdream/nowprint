@@ -14,6 +14,15 @@ public class Item extends SelectableItem {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("media_heading")
+    @Expose
+    private String mediaHeading;
+    @SerializedName("size_heading")
+    @Expose
+    private String sizeHeading;
+    @SerializedName("size_unit")
+    @Expose
+    private String sizeUnit;
 
     public String getImageThumb() {
         return imageThumb;
@@ -54,4 +63,27 @@ public class Item extends SelectableItem {
         this.mediums = mediums;
     }
 
+    public String getSizeHeading() {
+        return sizeHeading;
+    }
+
+    public void setSizeHeading(String sizeHeading) {
+        this.sizeHeading = sizeHeading;
+    }
+
+    public String getMediaHeading() {
+        return mediaHeading;
+    }
+
+    public void setMediaHeading(String mediaHeading) {
+        this.mediaHeading = mediaHeading;
+    }
+
+    public String getSizeUnit() {
+        return sizeUnit;
+    }
+
+    public void setSizeUnit(String sizeUnit) {
+        this.sizeUnit = sizeUnit;
+    }
 }
