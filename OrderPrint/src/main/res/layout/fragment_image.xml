@@ -10,42 +10,27 @@
     <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardElevation="10dp">
+        android:layout_margin="0dp"
+        app:cardElevation="0dp">
 
         <RelativeLayout
             android:id="@+id/content_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <FrameLayout
-                android:id="@+id/frame_container_background"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/ivImage"
-                android:layout_alignLeft="@+id/ivImage"
-                android:layout_alignRight="@+id/ivImage"
-                android:layout_alignTop="@+id/ivImage" />
-
             <ImageView
                 android:id="@+id/ivImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
                 android:layout_centerInParent="true"
-                android:background="@android:color/transparent"
-                android:src="@drawable/screen" />
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent" />
 
-            <FrameLayout
-                android:id="@+id/frame_container"
+            <ProgressBar
+                android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_alignBottom="@id/ivImage"
-                android:layout_alignLeft="@id/ivImage"
-                android:layout_alignRight="@id/ivImage"
-                android:layout_alignTop="@id/ivImage"
-                android:background="@android:color/transparent" />
+                android:layout_centerInParent="true" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </RelativeLayout>

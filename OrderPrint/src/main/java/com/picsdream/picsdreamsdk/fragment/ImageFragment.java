@@ -1,27 +1,36 @@
 package com.picsdream.picsdreamsdk.fragment;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.model.Medium;
+import com.picsdream.picsdreamsdk.model.RenderedImage;
 import com.picsdream.picsdreamsdk.model.SelectableItem;
-import com.picsdream.picsdreamsdk.util.Constants;
+import com.picsdream.picsdreamsdk.model.network.ImageRenderResponse;
+import com.picsdream.picsdreamsdk.network.Error;
+import com.picsdream.picsdreamsdk.presenter.ImageRenderPresenter;
+import com.picsdream.picsdreamsdk.util.SaneToast;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
+import com.picsdream.picsdreamsdk.view.ImageRenderView;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Authored by vipulkumar on 28/08/17.
  */
 
-public class ImageFragment extends BaseFragment {
+public class ImageFragment extends BaseFragment implements ImageRenderView {
     private ImageView ivImage;
-    private ViewGroup frameContainer, frameContainerBackground;
+    private ImageRenderPresenter imageRenderPresenter;
+    private ProgressBar progressBar;
 
     public static ImageFragment newInstance() {
         Bundle args = new Bundle();
@@ -39,76 +48,92 @@ public class ImageFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        imageRenderPresenter = new ImageRenderPresenter(this);
         setupUi(view);
     }
 
     private void setupUi(View view) {
         ivImage = view.findViewById(R.id.ivImage);
-        frameContainer = view.findViewById(R.id.frame_container);
-        frameContainerBackground = view.findViewById(R.id.frame_container_background);
+        progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
         setupDummyImage();
     }
 
     private void setupDummyImage() {
-        Uri uri = Uri.parse(SharedPrefsUtil.getImageUriString());
-        Picasso.with(getContext())
-                .load(uri)
-                .into(ivImage);
+//        Uri uri = Uri.parse(SharedPrefsUtil.getImageUriString());
+//        Picasso.with(getContext())
+//                .load(uri)
+//                .into(ivImage);
     }
 
     public void onItemSelected(SelectableItem selectableItem) {
         if (selectableItem instanceof Medium) {
-            clearFrames();
-            if (((Medium) selectableItem).getName().equalsIgnoreCase(Constants.FRAME_METAL)) {
-                makeMetalFrame();
-            } else if (((Medium) selectableItem).getName().equalsIgnoreCase(Constants.FRAME_WOOD)) {
-                makeWoodFrame();
-            } else if (((Medium) selectableItem).getName().equalsIgnoreCase(Constants.FRAME_PAPER)) {
-                makePaperFrame();
-            } else if (((Medium) selectableItem).getName().equalsIgnoreCase(Constants.FRAME_CANVAS)) {
-                makeCanvasFrame();
+            String storedImageUrl = getStoredImageUrl((Medium) selectableItem);
+            if (storedImageUrl != null) {
+                Picasso.with(getContext())
+                        .load(storedImageUrl)
+                        .into(ivImage);
             } else {
-                getActivity().getLayoutInflater().inflate(R.layout.frame_none, frameContainer);
+                imageRenderPresenter.getRenderedImageHttp(SharedPrefsUtil.getImageUriString(),
+                        SharedPrefsUtil.getOrder().getType(),
+                        ((Medium) selectableItem).getName());
             }
         }
     }
 
-    private void makeWoodFrame() {
-        ivImage.setAlpha(0.8f);
-        getActivity().getLayoutInflater().inflate(R.layout.frame_wood, frameContainerBackground);
-        changePadding(ivImage, 25);
+    private String getStoredImageUrl(Medium medium) {
+        RenderedImage renderedImage = SharedPrefsUtil.getRenderedImage();
+        if (renderedImage != null && renderedImage.getImageUri().equalsIgnoreCase(SharedPrefsUtil.getImageUriString())) {
+            for (RenderedImage.Image image : renderedImage.getImages()) {
+                if (image.getType().equalsIgnoreCase(SharedPrefsUtil.getOrder().getType()) &&
+                        image.getMedium().equalsIgnoreCase(medium.getName())) {
+                    return image.getImageUrl();
+                }
+            }
+        }
+        return null;
     }
 
-    private void makeMetalFrame() {
-        getActivity().getLayoutInflater().inflate(R.layout.frame_metal, frameContainer);
-        changePadding(ivImage, 0);
+    @Override
+    public void onImageRenderFailure(Error error) {
+        SaneToast.getToast(error.getErrorBody()).show();
     }
 
-    private void makePaperFrame() {
-        getActivity().getLayoutInflater().inflate(R.layout.frame_paper, frameContainerBackground);
-        changePadding(ivImage, 40);
+    @Override
+    public void onImageRenderSuccess(ImageRenderResponse imageRenderResponse) {
+        Picasso.with(getContext())
+                .load(imageRenderResponse.getImages().get(0))
+                .into(ivImage);
+        saveRenderedImage(imageRenderResponse);
     }
 
-    private void makeCanvasFrame() {
-        getActivity().getLayoutInflater().inflate(R.layout.frame_canvas, frameContainer);
-        changePadding(ivImage, 25);
+    private void saveRenderedImage(ImageRenderResponse imageRenderResponse) {
+        RenderedImage renderedImage = SharedPrefsUtil.getRenderedImage();
+        List<RenderedImage.Image> images;
+        if (renderedImage == null || !imageRenderResponse.getImageUriString()
+                .equalsIgnoreCase(renderedImage.getImageUri())) {
+            renderedImage = new RenderedImage();
+            images = new ArrayList<>();
+            renderedImage.setImageUri(imageRenderResponse.getImageUriString());
+        } else {
+            images = renderedImage.getImages();
+        }
+        RenderedImage.Image image = new RenderedImage.Image();
+        image.setType(imageRenderResponse.getType());
+        image.setImageUrl(imageRenderResponse.getImages().get(0));
+        image.setMedium(imageRenderResponse.getMedium());
+        images.add(image);
+        renderedImage.setImages(images);
+        SharedPrefsUtil.setRenderedImage(renderedImage);
     }
 
-    private void changePadding(final View view, final int padding) {
-//        Animation a = new Animation() {
-//            @Override
-//            protected void applyTransformation(float interpolatedTime, Transformation t) {
-//            }
-//        };
-//        a.setDuration(300);
-//        view.startAnimation(a);
-        int newPadding = padding;
-        view.setPadding(newPadding, newPadding, newPadding, newPadding);
+    @Override
+    public void onStartLoading() {
+        progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void clearFrames() {
-        ivImage.setAlpha(1f);
-        frameContainerBackground.removeAllViews();
-        frameContainer.removeAllViews();
+    @Override
+    public void onStopLoading() {
+        progressBar.setVisibility(View.GONE);
     }
 }

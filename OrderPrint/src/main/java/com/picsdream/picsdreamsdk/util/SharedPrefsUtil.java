@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.Country;
 import com.picsdream.picsdreamsdk.model.Order;
+import com.picsdream.picsdreamsdk.model.RenderedImage;
 import com.picsdream.picsdreamsdk.model.network.PurchaseResponse;
 import com.picsdream.picsdreamsdk.model.Region;
 import com.picsdream.picsdreamsdk.model.network.CouponsResponse;
@@ -118,6 +119,16 @@ public final class SharedPrefsUtil {
 
     public static PurchaseResponse getTempJsonPurchase() {
         return new Gson().fromJson(getString("purchase", ""), PurchaseResponse.class);
+    }
+
+
+    public static void setRenderedImage(RenderedImage renderedImage) {
+        String string = new Gson().toJson(renderedImage);
+        setString("renderedImage", string);
+    }
+
+    public static RenderedImage getRenderedImage() {
+        return new Gson().fromJson(getString("renderedImage", ""), RenderedImage.class);
     }
 
     public static void setColorPrimary(String colorPrimary) {
