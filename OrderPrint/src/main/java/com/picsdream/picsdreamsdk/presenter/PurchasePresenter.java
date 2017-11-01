@@ -172,7 +172,7 @@ public class PurchasePresenter {
         params.put("discount", order.getDiscount());
         params.put("tax", order.getTax());
         params.put("shipping", order.getShipping());
-        params.put("total_paid", order.getFinalCost());
+        params.put("total_paid", order.getTotalPaid());
         params.put("title", order.getType() + " " + order.getMedium() + " " + order.getSize());
 
         return params;

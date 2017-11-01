@@ -1,6 +1,9 @@
 package com.picsdream.picsdreamsdk.presenter;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -110,6 +113,9 @@ public class ImageRenderPresenter {
         try {
             bmp = MediaStore.Images.Media.getBitmap(ContextProvider.getApplication()
                     .getContentResolver(), Uri.parse(SharedPrefsUtil.getImageUriString()));
+            if (bmp.getWidth() > 1000 || bmp.getHeight() > 1000) {
+                bmp = resize(bmp, 1000, 1000);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,7 +123,8 @@ public class ImageRenderPresenter {
         File cacheFile = new File(ContextProvider.getApplication().getCacheDir(), filename);
         try {
             FileOutputStream fos = new FileOutputStream(cacheFile.getAbsolutePath());
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 50, fos);
+
             fos.flush();
             fos.close();
         } catch (IOException e) {
@@ -126,5 +133,51 @@ public class ImageRenderPresenter {
         }
         Uri uri = Uri.parse(ContextProvider.getApplication().getCacheDir() + "/" + filename);
         return new File(uri.getPath());
+    }
+
+    private Bitmap resizeImage(Bitmap originalImage, int width, int height) {
+        Bitmap background = Bitmap.createBitmap((int)width, (int)height, Bitmap.Config.ARGB_8888);
+
+        float originalWidth = originalImage.getWidth();
+        float originalHeight = originalImage.getHeight();
+
+        Canvas canvas = new Canvas(background);
+
+        float scale = width / originalWidth;
+
+        float xTranslation = 0.0f;
+        float yTranslation = (height - originalHeight * scale) / 2.0f;
+
+        Matrix transformation = new Matrix();
+        transformation.postTranslate(xTranslation, yTranslation);
+        transformation.preScale(scale, scale);
+
+        Paint paint = new Paint();
+        paint.setFilterBitmap(true);
+
+        canvas.drawBitmap(originalImage, transformation, paint);
+
+        return background;
+    }
+
+    private static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
+        if (maxHeight > 0 && maxWidth > 0) {
+            int width = image.getWidth();
+            int height = image.getHeight();
+            float ratioBitmap = (float) width / (float) height;
+            float ratioMax = (float) maxWidth / (float) maxHeight;
+
+            int finalWidth = maxWidth;
+            int finalHeight = maxHeight;
+            if (ratioMax > ratioBitmap) {
+                finalWidth = (int) ((float)maxHeight * ratioBitmap);
+            } else {
+                finalHeight = (int) ((float)maxWidth / ratioBitmap);
+            }
+            image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+            return image;
+        } else {
+            return image;
+        }
     }
 }

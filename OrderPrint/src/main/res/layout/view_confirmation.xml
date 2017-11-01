@@ -7,15 +7,6 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginTop="64dp"
-        android:background="@drawable/shape_round_black"
-        android:padding="20dp"
-        android:tint="@color/white"
-        app:srcCompat="@drawable/ic_local_mall_black_24dp" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,6 +42,7 @@
                     android:padding="24dp">
 
                     <TextView
+                        android:visibility="gone"
                         android:id="@+id/tvProductName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -62,10 +54,50 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="12dp"
                         android:fontFamily="@string/font_family_regular"
                         android:gravity="center"
                         android:text="Your order will be delivered within 4-6 days."
+                        android:textColor="@color/picsDreamTextMedium"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvOrderNo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@string/font_family_regular"
+                        android:gravity="center"
+                        android:text="ORD34556456456"
+                        android:textColor="@color/picsDreamTextMedium"
+                        android:textSize="14sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="24dp"
+                        android:layout_marginTop="24dp"
+                        android:background="@color/picsDreamBackground" />
+
+                    <TextView
+                        android:id="@+id/tvPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@string/font_family_regular"
+                        android:gravity="center"
+                        android:text="500"
+                        android:textColor="@color/picsDreamTextMedium"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvPriceText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@string/font_family_regular"
+                        android:gravity="center"
+                        android:text="is payable at the time of delivery"
                         android:textColor="@color/picsDreamTextMedium"
                         android:textSize="14sp" />
 

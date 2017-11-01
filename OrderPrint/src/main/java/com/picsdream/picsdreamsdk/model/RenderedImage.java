@@ -1,5 +1,6 @@
 package com.picsdream.picsdreamsdk.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,15 +50,15 @@ public class RenderedImage {
             this.medium = medium;
         }
 
-        public String getImageUrl() {
-            return imageUrl;
+        public ArrayList<String> getImageUrls() {
+            return imageUrls;
         }
 
-        public void setImageUrl(String imageUrl) {
-            this.imageUrl = imageUrl;
+        public void setImageUrls(ArrayList<String> imageUrls) {
+            this.imageUrls = imageUrls;
         }
 
         private String medium;
-        private String imageUrl;
+        private ArrayList<String> imageUrls;
     }
 }

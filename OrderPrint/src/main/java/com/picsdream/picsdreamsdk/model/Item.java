@@ -38,6 +38,9 @@ public class Item extends SelectableItem {
     @SerializedName("mediums")
     @Expose
     private List<Medium> mediums = null;
+    @SerializedName("size_guide")
+    @Expose
+    private List<String> sizeGuideUrls = null;
 
     public String getType() {
         return type;
@@ -85,5 +88,13 @@ public class Item extends SelectableItem {
 
     public void setSizeUnit(String sizeUnit) {
         this.sizeUnit = sizeUnit;
+    }
+
+    public List<String> getSizeGuideUrls() {
+        return sizeGuideUrls;
+    }
+
+    public void setSizeGuideUrls(List<String> sizeGuideUrls) {
+        this.sizeGuideUrls = sizeGuideUrls;
     }
 }

@@ -79,7 +79,7 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
             if (fragment != null && fragment instanceof AddressFragment) {
                 if (((AddressFragment) fragment).validateUserInfo()) {
-                    NavigationUtil.startActivity(AddressActivity.this, PaymentActivity.class);
+                    setupAddressReviewFragment();
                 }
             } else if (fragment != null && fragment instanceof AddressReviewFragment) {
                 NavigationUtil.startActivity(AddressActivity.this, PaymentActivity.class);

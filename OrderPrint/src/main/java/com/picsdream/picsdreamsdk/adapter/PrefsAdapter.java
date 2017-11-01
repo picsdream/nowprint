@@ -85,7 +85,7 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
                 holder.tvLabel.setVisibility(View.INVISIBLE);
                 holder.tvSubLabel.setVisibility(View.INVISIBLE);
             }
-            holder.tvLabelOnImage.setText(Utils.capitalizeFirstCharacterOfEveryWord(((Medium) selectableItem).getName()));
+            holder.tvLabelOnImage.setText(Utils.capitalizeFirstCharacterOfEveryWord(((Medium) selectableItem).getText()));
         } else if (selectableItem instanceof Price) {
             holder.ivImage.setVisibility(View.INVISIBLE);
             holder.tvLabel.setVisibility(View.VISIBLE);

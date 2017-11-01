@@ -34,7 +34,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:padding="@dimen/spacing_regular"
                 android:fontFamily="@string/font_family_medium"
+                android:textSize="@dimen/text_mini"
+                android:gravity="center"
                 android:text="Desc"
                 android:textColor="@color/picsDreamTextDark" />
 

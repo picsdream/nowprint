@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.fragment.BaseFragment;
+import com.picsdream.picsdreamsdk.model.Item;
+import com.picsdream.picsdreamsdk.model.Order;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 import com.squareup.picasso.Picasso;
@@ -65,6 +67,18 @@ public class SizeGuideActivity extends BaseActivity {
         });
     }
 
+
+    private static Item getSelectedItem() {
+        InitialAppDataResponse initialAppDataResponse = SharedPrefsUtil.getInitialDataResponse();
+        Order order = SharedPrefsUtil.getOrder();
+        for (Item item : initialAppDataResponse.getItems()) {
+            if (item.getType().equalsIgnoreCase(order.getType())) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     public class SizeGuidePagerAdapter extends FragmentStatePagerAdapter {
         public SizeGuidePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -72,7 +86,7 @@ public class SizeGuideActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return initialAppDataResponse.getSizeGuideSizes().size();
+            return getSelectedItem().getSizeGuideUrls().size();
         }
 
         @Override
@@ -103,10 +117,9 @@ public class SizeGuideActivity extends BaseActivity {
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             position = getArguments().getInt("position");
-            InitialAppDataResponse initialData = SharedPrefsUtil.getInitialDataResponse();
             ivImage = view.findViewById(R.id.ivImage);
             Picasso.with(getActivity())
-                    .load(initialData.getSizeGuideSizes().get(position))
+                    .load(getSelectedItem().getSizeGuideUrls().get(position))
                     .into(ivImage);
         }
     }

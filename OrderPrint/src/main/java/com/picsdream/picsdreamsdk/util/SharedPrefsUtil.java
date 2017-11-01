@@ -180,6 +180,14 @@ public final class SharedPrefsUtil {
         return getString("imageUri", "");
     }
 
+    public static void setImageSquare(boolean isSquare) {
+        setBoolean("isImageSquare", isSquare);
+    }
+
+    public static boolean isImageSquare() {
+        return getBoolean("isImageSquare", false);
+    }
+
     private SharedPrefsUtil() {
     }
 }

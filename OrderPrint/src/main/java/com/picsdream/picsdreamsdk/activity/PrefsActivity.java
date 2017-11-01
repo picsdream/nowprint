@@ -64,7 +64,7 @@ public class PrefsActivity extends BaseActivity implements View.OnClickListener 
         proceedLayout.setOnClickListener(this);
     }
 
-    private void onProceedLayoutClicked() {
+    public void onProceedLayoutClicked() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.prefs_fragment_container);
         if (fragment != null) {
             activeFragmentTag = fragment.getTag();

@@ -10,12 +10,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.picsdream.picsdreamsdk.R;
+import com.picsdream.picsdreamsdk.activity.OnMobileCoverSelector;
+import com.picsdream.picsdreamsdk.activity.PrefsActivity;
+import com.picsdream.picsdreamsdk.activity.SearchMobileCoverFragment;
 import com.picsdream.picsdreamsdk.activity.SizeGuideActivity;
 import com.picsdream.picsdreamsdk.adapter.PrefsAdapter;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.Item;
 import com.picsdream.picsdreamsdk.model.Medium;
 import com.picsdream.picsdreamsdk.model.Order;
+import com.picsdream.picsdreamsdk.model.Price;
 import com.picsdream.picsdreamsdk.model.SelectableItem;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
 import com.picsdream.picsdreamsdk.util.Constants;
@@ -29,7 +33,7 @@ import java.util.ArrayList;
  * Authored by vipulkumar on 28/08/17.
  */
 
-public class PrefFragment extends BaseFragment {
+public class PrefFragment extends BaseFragment implements OnMobileCoverSelector {
     private ArrayList<SelectableItem> items;
     private TextView tvLabel, tvSizeGuide;
     private String tag;
@@ -86,14 +90,35 @@ public class PrefFragment extends BaseFragment {
             for (Item item : initialAppDataResponse.getItems()) {
                 if (item.getType().equalsIgnoreCase(order.getType())) {
                     for (Medium medium : item.getMediums()) {
-                        if (medium.getName().equalsIgnoreCase(order.getMedium()))
-                            items.addAll(medium.getPrices());
+                        if (medium.getName().equalsIgnoreCase(order.getMedium())) {
+                            for (Price price : medium.getPrices()) {
+//                                manageSquareSizes(price);
+                                items.add(price);
+                            }
+                        }
                     }
                 }
             }
         }
         items.get(0).setSelected(true);
         return items;
+    }
+
+    private void manageSquareSizes(Price price) {
+        if (SharedPrefsUtil.isImageSquare()) {
+            if (isSizeSquare(price.getSize())) {
+                items.add(price);
+            }
+        } else {
+            if (!isSizeSquare(price.getSize())) {
+                items.add(price);
+            }
+        }
+    }
+
+    private boolean isSizeSquare(String size) {
+        return (Integer.parseInt(size.substring(0, size.indexOf("x")))
+                == Integer.parseInt(size.substring(size.indexOf("x") + 1, size.length())));
     }
 
     private Item getSelectedItem() {
@@ -126,15 +151,33 @@ public class PrefFragment extends BaseFragment {
         if (tag.equalsIgnoreCase(Constants.TAG_TYPE)) {
             tvSizeGuide.setVisibility(View.GONE);
         } else if (tag.equalsIgnoreCase(Constants.TAG_MEDIA)) {
-            tvSizeGuide.setVisibility(View.GONE);
+            if (getSelectedItem().getType().equalsIgnoreCase("mobile-cover")) {
+                tvSizeGuide.setVisibility(View.VISIBLE);
+                tvSizeGuide.setText("Search");
+                tvSizeGuide.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SearchMobileCoverFragment.newInstance(getSelectedItem().getType())
+                                .show(getChildFragmentManager(), "");
+                    }
+                });
+            } else {
+                tvSizeGuide.setVisibility(View.GONE);
+            }
         } else if (tag.equalsIgnoreCase(Constants.TAG_SIZE)) {
-            tvSizeGuide.setVisibility(View.VISIBLE);
-            tvSizeGuide.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    NavigationUtil.startActivityWithClipReveal(getContext(), SizeGuideActivity.class, tvSizeGuide);
-                }
-            });
+            Item item = getSelectedItem();
+            if (item != null && item.getSizeGuideUrls() != null && item.getSizeGuideUrls().size() > 0) {
+                tvSizeGuide.setVisibility(View.VISIBLE);
+                tvSizeGuide.setText("Size Guide");
+                tvSizeGuide.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        NavigationUtil.startActivityWithClipReveal(getContext(), SizeGuideActivity.class, tvSizeGuide);
+                    }
+                });
+            } else {
+                tvSizeGuide.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -150,5 +193,14 @@ public class PrefFragment extends BaseFragment {
                 ContextProvider.trackScreenView("Select Size");
             }
         }
+    }
+
+    @Override
+    public void onMobileCoverSelected(Medium medium) {
+        Order order = SharedPrefsUtil.getOrder();
+        order.setMedium(medium.getName());
+        SharedPrefsUtil.saveOrder(order);
+        ((PrefsActivity) getActivity()).onItemSelected(medium);
+        ((PrefsActivity) getActivity()).onProceedLayoutClicked();
     }
 }

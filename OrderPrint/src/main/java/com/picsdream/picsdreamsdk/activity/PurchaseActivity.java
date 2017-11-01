@@ -27,11 +27,14 @@ public class PurchaseActivity extends BaseActivity implements PurchaseView, View
     private PurchasePresenter purchasePresenter;
     private ViewGroup proceedLayout;
     private TextView helpLayout;
+    private TextView tvPrice, tvPriceText, tvOrderNo;
+    private boolean isCod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_purchase);
+        isCod = getIntent().getBooleanExtra("isCod", false);
         initUi();
         if (SharedPrefsUtil.getSandboxMode()) {
             onUploadPhotoSuccess(null);
@@ -60,6 +63,9 @@ public class PurchaseActivity extends BaseActivity implements PurchaseView, View
         confirmationLayout = findViewById(R.id.confirmationLayout);
         retryLayout = findViewById(R.id.retryLayout);
         proceedLayout = findViewById(R.id.proceedLayout);
+        tvPrice = findViewById(R.id.tvPrice);
+        tvPriceText = findViewById(R.id.tvPriceText);
+        tvOrderNo = findViewById(R.id.tvOrderNo);
         helpLayout = findViewById(R.id.tvHelp);
         confirmationLayout.setVisibility(View.GONE);
         retryLayout.setVisibility(View.GONE);
@@ -99,6 +105,13 @@ public class PurchaseActivity extends BaseActivity implements PurchaseView, View
         confirmationLayout.setVisibility(View.VISIBLE);
         retryLayout.setVisibility(View.GONE);
         ContextProvider.trackEvent(APP_KEY, "Photo Upload Success", "");
+        tvPrice.setText("₹" + SharedPrefsUtil.getOrder().getFinalCost());
+        if (isCod) {
+            tvPriceText.setText("is payable at the time of delivery");
+        } else {
+            tvPriceText.setText("paid online");
+        }
+        tvOrderNo.setText(SharedPrefsUtil.getOrder().getId());
     }
 
     @Override
