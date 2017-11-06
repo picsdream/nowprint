@@ -52,7 +52,7 @@ public class PoweredByPdView extends LinearLayout {
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("https://www.picsdream.com");
+                Uri uri = Uri.parse("https://www.picsdream.com/moments?utm_source=partnership&utm_medium=SDK");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 context.startActivity(intent);
             }
