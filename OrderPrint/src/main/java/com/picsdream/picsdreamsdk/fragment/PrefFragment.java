@@ -204,6 +204,7 @@ public class PrefFragment extends BaseFragment implements OnMobileCoverSelector 
     public void onMobileCoverSelected(Medium medium) {
         Order order = SharedPrefsUtil.getOrder();
         order.setMedium(medium.getName());
+        order.setMediumText(medium.getText());
         SharedPrefsUtil.saveOrder(order);
         ((PrefsActivity) getActivity()).onItemSelected(medium);
         ((PrefsActivity) getActivity()).onProceedLayoutClicked();

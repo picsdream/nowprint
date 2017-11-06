@@ -66,7 +66,7 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
                     .fit().centerCrop()
                     .into(holder.ivImage);
             holder.ivImage.setVisibility(View.VISIBLE);
-            holder.tvLabel.setText(Utils.capitalizeFirstCharacterOfEveryWord(((Item) selectableItem).getName()));
+            holder.tvLabel.setText(((Item) selectableItem).getName());
             holder.tvLabel.setVisibility(View.VISIBLE);
             holder.tvSubLabel.setVisibility(View.INVISIBLE);
             holder.tvLabelOnImage.setVisibility(View.INVISIBLE);
@@ -85,7 +85,7 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
                 holder.tvLabel.setVisibility(View.INVISIBLE);
                 holder.tvSubLabel.setVisibility(View.INVISIBLE);
             }
-            holder.tvLabelOnImage.setText(Utils.capitalizeFirstCharacterOfEveryWord(((Medium) selectableItem).getText()));
+            holder.tvLabelOnImage.setText(((Medium) selectableItem).getText());
         } else if (selectableItem instanceof Price) {
             holder.ivImage.setVisibility(View.INVISIBLE);
             holder.tvLabel.setVisibility(View.VISIBLE);
@@ -94,7 +94,7 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
             holder.tvSubLabel.setPaintFlags(holder.tvSubLabel.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             float discountedPrice = Utils.getDiscountedPrice((int) ((Price) selectableItem).getPrice(),
                     initialAppDataResponse.getDis());
-            holder.tvLabelOnImage.setText(((Price) selectableItem).getSize());
+            holder.tvLabelOnImage.setText(Utils.capitalizeFirstCharacterOfEveryWord(((Price) selectableItem).getSize()));
             holder.tvSubLabel.setText(Utils.getFormattedPrice(
                     Utils.getConvertedPrice(((Price) selectableItem).getPrice())));
             holder.tvLabel.setText(Utils.getFormattedPrice(Utils.getConvertedPrice(discountedPrice)));
@@ -182,6 +182,7 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
             order.setType(((Item) selectableItem).getType());
         } else if (selectableItem instanceof Medium) {
             order.setMedium(((Medium) selectableItem).getName());
+            order.setMediumText(((Medium) selectableItem).getText());
         } else if (selectableItem instanceof Price) {
             order.setSize(((Price) selectableItem).getSize());
             order.setTotalCost(Utils.getConvertedPrice(((Price) selectableItem).getPrice()));

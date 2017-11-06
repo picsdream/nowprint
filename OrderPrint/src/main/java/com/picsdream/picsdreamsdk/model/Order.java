@@ -14,6 +14,9 @@ public class Order {
     @SerializedName("medium")
     @Expose
     private String medium;
+    @SerializedName("medium_text")
+    @Expose
+    private String mediumText;
     @SerializedName("size")
     @Expose
     private String size;
@@ -71,6 +74,14 @@ public class Order {
 
     public void setMedium(String medium) {
         this.medium = medium;
+    }
+
+    public String getMediumText() {
+        return mediumText;
+    }
+
+    public void setMediumText(String mediumText) {
+        this.mediumText = mediumText;
     }
 
     public String getSize() {

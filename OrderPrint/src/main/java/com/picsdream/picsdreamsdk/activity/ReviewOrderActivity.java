@@ -205,7 +205,7 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
 
     private String getProductType(InitialAppDataResponse initialAppDataResponse, Order order) {
         return Utils.capitalizeFirstCharacterOfEveryWord(
-                getItemNameFromType(initialAppDataResponse, order.getType()) + " " + order.getMedium());
+                getItemNameFromType(initialAppDataResponse, order.getType()) + " " + order.getMediumText());
     }
 
     private String getItemNameFromType(InitialAppDataResponse initialAppDataResponse, String type) {
