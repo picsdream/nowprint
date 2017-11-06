@@ -66,11 +66,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:fontFamily="@string/font_family_regular"
+                        android:fontFamily="@string/font_family_medium"
                         android:gravity="center"
                         android:text="ORD34556456456"
                         android:textColor="@color/picsDreamTextMedium"
                         android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvDateTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@string/font_family_regular"
+                        android:gravity="center"
+                        android:text="02 Nov 2016, 03:00 PM"
+                        android:textColor="@color/picsDreamTextMedium"
+                        android:textSize="12sp" />
 
                     <View
                         android:layout_width="match_parent"

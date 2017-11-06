@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.activity.OnMobileCoverSelector;
 import com.picsdream.picsdreamsdk.activity.PrefsActivity;
-import com.picsdream.picsdreamsdk.activity.SearchMobileCoverFragment;
 import com.picsdream.picsdreamsdk.activity.SizeGuideActivity;
 import com.picsdream.picsdreamsdk.adapter.PrefsAdapter;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
@@ -35,7 +34,7 @@ import java.util.ArrayList;
 
 public class PrefFragment extends BaseFragment implements OnMobileCoverSelector {
     private ArrayList<SelectableItem> items;
-    private TextView tvLabel, tvSizeGuide;
+    private TextView tvSizeGuide;
     private String tag;
 
     public static PrefFragment newInstance(String tag) {
@@ -61,7 +60,7 @@ public class PrefFragment extends BaseFragment implements OnMobileCoverSelector 
 
     private void setupUi(View view) {
         tvSizeGuide = view.findViewById(R.id.tv_size_guide);
-        tvLabel = view.findViewById(R.id.tv_label);
+        TextView tvLabel = view.findViewById(R.id.tv_label);
         RecyclerView recyclerViewMedia = view.findViewById(R.id.recycler_view_media);
 
         initPerfs(tag);
@@ -92,15 +91,21 @@ public class PrefFragment extends BaseFragment implements OnMobileCoverSelector 
                     for (Medium medium : item.getMediums()) {
                         if (medium.getName().equalsIgnoreCase(order.getMedium())) {
                             for (Price price : medium.getPrices()) {
-//                                manageSquareSizes(price);
-                                items.add(price);
+                                if (item.getType().equalsIgnoreCase("wall") ||
+                                        item.getType().equalsIgnoreCase("table")) {
+                                manageSquareSizes(price);
+                                } else {
+                                    items.add(price);
+                                }
                             }
                         }
                     }
                 }
             }
         }
-        items.get(0).setSelected(true);
+        if (items.size() > 0) {
+            items.get(0).setSelected(true);
+        }
         return items;
     }
 
@@ -129,7 +134,7 @@ public class PrefFragment extends BaseFragment implements OnMobileCoverSelector 
                 return item;
             }
         }
-        return null;
+        return new Item();
     }
 
     private String getFragmentLabel(String tag) {

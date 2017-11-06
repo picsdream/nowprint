@@ -56,7 +56,7 @@ public class OrderPrint {
     }
 
     public OrderPrint returnBackActivity(Class<?> cls) {
-        SharedPrefsUtil.setColorPrimary(cls.getName());
+        SharedPrefsUtil.setReturnActivityName(cls.getName());
         return this;
     }
 

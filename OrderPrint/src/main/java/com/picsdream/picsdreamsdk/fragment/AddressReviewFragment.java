@@ -1,8 +1,10 @@
 package com.picsdream.picsdreamsdk.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,9 +137,27 @@ public class AddressReviewFragment extends BaseFragment implements View.OnClickL
         payCodLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), PaymentActivity.class);
-                intent.putExtra("isCod", true);
-                NavigationUtil.startActivity(getContext(), intent);
+                new AlertDialog.Builder(getContext())
+                        .setMessage("Proceed with COD?")
+                        .setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(),
+                                        "Proceed with COD", "COD dialog confirm");
+                                Intent intent = new Intent(getActivity(), PaymentActivity.class);
+                                intent.putExtra("isCod", true);
+                                NavigationUtil.startActivity(getContext(), intent);
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(),
+                                        "COD cancelled", "COD dialog cancel");
+                                dialogInterface.dismiss();
+                            }
+                        }).show();
             }
         });
     }

@@ -9,7 +9,7 @@ import com.picsdream.picsdreamsdk.model.network.UploadPhotoResponse;
 
 public interface PurchaseView extends BaseView {
     void onPurchaseFailure();
-    void onPurchaseSuccess();
+    void onPurchaseSuccess(PurchaseResponse purchaseResponse);
     void onUploadPhotoSuccess(UploadPhotoResponse uploadPhotoResponse);
     void onUploadPhotoFailure(PurchaseResponse purchaseResponse);
 }

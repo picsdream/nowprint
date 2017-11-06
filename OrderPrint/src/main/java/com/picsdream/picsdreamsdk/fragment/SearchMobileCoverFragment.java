@@ -1,4 +1,4 @@
-package com.picsdream.picsdreamsdk.activity;
+package com.picsdream.picsdreamsdk.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,16 +14,15 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.picsdream.picsdreamsdk.R;
+import com.picsdream.picsdreamsdk.activity.OnMobileCoverSelector;
 import com.picsdream.picsdreamsdk.adapter.SearchMobileCoverAdapter;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
-import com.picsdream.picsdreamsdk.fragment.PrefFragment;
 import com.picsdream.picsdreamsdk.model.Item;
 import com.picsdream.picsdreamsdk.model.Medium;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 import com.picsdream.picsdreamsdk.util.Utils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Authored by vipulkumar on 11/09/17.
@@ -110,9 +109,9 @@ public class SearchMobileCoverFragment extends DialogFragment {
     }
 
     void filter(String text){
-        List<Medium> temp = new ArrayList();
+        ArrayList<Medium> temp = new ArrayList<>();
         for(Medium medium: mediums){
-            if(medium.getText().contains(text)){
+            if(medium.getText().toLowerCase().contains(text.toLowerCase())){
                 temp.add(medium);
             }
         }

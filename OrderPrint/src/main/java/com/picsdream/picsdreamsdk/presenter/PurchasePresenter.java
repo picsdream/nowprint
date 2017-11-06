@@ -51,7 +51,7 @@ public class PurchasePresenter {
             public void onSuccess(Object o) {
                 PurchaseResponse purchaseResponse = (PurchaseResponse) o;
                 if (purchaseResponse != null) {
-                    purchaseView.onPurchaseSuccess();
+                    purchaseView.onPurchaseSuccess(purchaseResponse);
                     SharedPrefsUtil.setTempJsonPurchase(purchaseResponse);
                     uploadPhoto(purchaseResponse);
                 } else {

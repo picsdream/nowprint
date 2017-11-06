@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.activity.OnMobileCoverSelector;
-import com.picsdream.picsdreamsdk.activity.SearchMobileCoverFragment;
+import com.picsdream.picsdreamsdk.fragment.SearchMobileCoverFragment;
 import com.picsdream.picsdreamsdk.model.Medium;
 
 import java.util.List;
