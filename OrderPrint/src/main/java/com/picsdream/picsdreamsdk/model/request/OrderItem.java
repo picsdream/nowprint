@@ -12,6 +12,9 @@ public class OrderItem {
     @SerializedName("type")
     @Expose
     private String type;
+    @SerializedName("medium_text")
+    @Expose
+    private String mediumText;
     @SerializedName("medium")
     @Expose
     private String medium;
@@ -71,6 +74,14 @@ public class OrderItem {
 
     public void setMedium(String medium) {
         this.medium = medium;
+    }
+
+    public String getMediumText() {
+        return mediumText;
+    }
+
+    public void setMediumText(String mediumText) {
+        this.mediumText = mediumText;
     }
 
     public String getSize() {

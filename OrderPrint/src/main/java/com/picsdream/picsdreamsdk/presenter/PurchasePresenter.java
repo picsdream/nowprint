@@ -10,6 +10,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
+import com.picsdream.picsdreamsdk.model.Medium;
 import com.picsdream.picsdreamsdk.model.Order;
 import com.picsdream.picsdreamsdk.model.network.PurchaseResponse;
 import com.picsdream.picsdreamsdk.model.network.UploadPhotoResponse;
@@ -20,6 +21,7 @@ import com.picsdream.picsdreamsdk.network.RequestHandler;
 import com.picsdream.picsdreamsdk.network.RetrofitHandler;
 import com.picsdream.picsdreamsdk.util.SaneToast;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
+import com.picsdream.picsdreamsdk.util.Utils;
 import com.picsdream.picsdreamsdk.view.PurchaseView;
 
 import java.io.File;
@@ -151,9 +153,10 @@ public class PurchasePresenter {
         orderItem.setDiscount(order.getDiscount());
         orderItem.setFinalCost(order.getFinalCost());
         orderItem.setMedium(order.getMedium());
+        orderItem.setMediumText(order.getMediumText());
         orderItem.setSize(order.getSize());
         orderItem.setType(order.getType());
-        orderItem.setTitle(order.getType() + " " + order.getMedium() + " " + order.getSize());
+        orderItem.setTitle(Utils.beautifyName(order.getType() + " - " + order.getMediumText() + " " + order.getSize()));
 
         ArrayList<OrderItem> orderItems = new ArrayList<>();
         orderItems.add(orderItem);
@@ -173,7 +176,7 @@ public class PurchasePresenter {
         params.put("tax", order.getTax());
         params.put("shipping", order.getShipping());
         params.put("total_paid", order.getTotalPaid());
-        params.put("title", order.getType() + " " + order.getMedium() + " " + order.getSize());
+        params.put("title", order.getType() + " " + order.getMediumText() + " " + order.getSize());
 
         return params;
     }
