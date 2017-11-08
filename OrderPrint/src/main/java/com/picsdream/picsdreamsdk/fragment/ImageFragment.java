@@ -168,8 +168,7 @@ public class ImageFragment extends BaseFragment implements ImageRenderView {
 
             @Override
             public View createTabView(ViewGroup container, int position, PagerAdapter adapter) {
-                View itemView = getLayoutInflater().inflate(R.layout.tab_item_indicator, container, false);
-                return itemView;
+                return LayoutInflater.from(getContext()).inflate(R.layout.tab_item_indicator, container, false);
             }
         });
     }
