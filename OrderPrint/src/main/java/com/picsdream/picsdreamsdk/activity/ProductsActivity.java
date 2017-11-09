@@ -1,5 +1,6 @@
 package com.picsdream.picsdreamsdk.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +12,9 @@ import android.widget.Toast;
 
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.adapter.ProductsAdapter;
+import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
+import com.picsdream.picsdreamsdk.util.NavigationUtil;
 import com.picsdream.picsdreamsdk.util.SaneToast;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 import com.picsdream.picsdreamsdk.util.Utils;
@@ -53,5 +56,19 @@ public class ProductsActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Utils.onHelpItemsClicked(item, this, "Pref Screen");
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        try {
+            Class<?> c = Class.forName(SharedPrefsUtil.getReturnActivityName());
+            Intent intent = new Intent(ProductsActivity.this, c);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            NavigationUtil.startActivity(ProductsActivity.this, intent);
+
+            ContextProvider.trackEvent(APP_KEY, "Purchase complete", "Continue button clicked");
+
+        } catch (ClassNotFoundException ignored) {
+        }
     }
 }

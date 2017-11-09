@@ -36,19 +36,4 @@ public class BaseActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
     }
-
-    @Override
-    public void onBackPressed() {
-        try {
-            Class<?> c = Class.forName(SharedPrefsUtil.getReturnActivityName());
-            Intent intent = new Intent(BaseActivity.this, c);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            NavigationUtil.startActivity(BaseActivity.this, intent);
-
-            ContextProvider.trackEvent(APP_KEY, "Purchase complete", "Continue button clicked");
-
-        } catch (ClassNotFoundException ignored) {
-        }
-    }
-
 }
