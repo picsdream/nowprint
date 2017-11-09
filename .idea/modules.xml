@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/OrderPrint/OrderPrint.iml" filepath="$PROJECT_DIR$/OrderPrint/OrderPrint.iml" />
-      <module fileurl="file://C:\Users\Ankur\AndroidStudioProjects\nowprint\Sample.iml" filepath="C:\Users\Ankur\AndroidStudioProjects\nowprint\Sample.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/nowprint.iml" filepath="$PROJECT_DIR$/nowprint.iml" />
     </modules>
