@@ -1,14 +1,11 @@
 package com.picsdream.picsdreamsdk.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.picsdream.picsdreamsdk.application.ContextProvider;
-import com.picsdream.picsdreamsdk.util.NavigationUtil;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 
 /**

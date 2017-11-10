@@ -82,11 +82,9 @@ public class InitialDataLoadActivity extends BaseActivity implements InitialData
 
         if (SharedPrefsUtil.getCountry() == null) {
             Intent intent = new Intent(this, SelectCountryActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             NavigationUtil.startActivity(this, intent);
         } else {
             Intent intent = new Intent(this, ProductsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             NavigationUtil.startActivity(this, intent);
         }
     }

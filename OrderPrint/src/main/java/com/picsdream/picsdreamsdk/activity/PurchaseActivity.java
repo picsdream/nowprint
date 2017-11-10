@@ -153,7 +153,7 @@ public class PurchaseActivity extends BaseActivity implements PurchaseView, View
             try {
                 Class<?> c = Class.forName(SharedPrefsUtil.getReturnActivityName());
                 Intent intent = new Intent(PurchaseActivity.this, c);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 NavigationUtil.startActivity(PurchaseActivity.this, intent);
 
                 ContextProvider.trackEvent(APP_KEY, "Purchase complete", "Continue button clicked");

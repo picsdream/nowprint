@@ -146,7 +146,6 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
         }
         SharedPrefsUtil.saveOrder(order);
         Intent intent = new Intent(this, PurchaseActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra("isCod", isCod);
         NavigationUtil.startActivity(this, intent);
     }

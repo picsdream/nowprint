@@ -8,7 +8,8 @@
     <application
         android:allowBackup="true"
         android:supportsRtl="true">
-        <activity android:name=".activity.InitialDataLoadActivity" />
+        <activity android:name=".activity.InitialDataLoadActivity"
+            android:noHistory="true"/>
         <activity
             android:name="com.paytm.pgsdk.PaytmPGActivity"
             android:configChanges="keyboardHidden|orientation|keyboard"
@@ -16,13 +17,18 @@
         <activity android:name=".activity.ReviewOrderActivity"
             android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".activity.AddressActivity"/>
-        <activity android:name=".activity.PaymentActivity"/>
-        <activity android:name=".activity.SelectCountryActivity"/>
+        <activity android:name=".activity.PaymentActivity"
+            android:noHistory="true"/>
+        <activity android:name=".activity.SelectCountryActivity"
+            android:noHistory="true"/>
         <activity android:name=".activity.PrefsActivity"/>
         <activity android:name=".activity.ProductsActivity"/>
-        <activity android:name=".activity.PurchaseActivity"/>
-        <activity android:name=".activity.SizeGuideActivity"/>
+        <activity android:name=".activity.PurchaseActivity"
+            android:noHistory="true"/>
+        <activity android:name=".activity.SizeGuideActivity"
+            android:noHistory="true"/>
         <activity android:name=".activity.EmailPhotoActivity"
+            android:noHistory="true"
             android:windowSoftInputMode="adjustResize"/>
     </application>
 </manifest>

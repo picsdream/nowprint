@@ -52,7 +52,6 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.Pref
                 SharedPrefsUtil.setCountry(country);
                 Utils.setRegionAfterCountry();
                 Intent intent = new Intent(context, ProductsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 NavigationUtil.startActivity(context, intent);
             }
         });
