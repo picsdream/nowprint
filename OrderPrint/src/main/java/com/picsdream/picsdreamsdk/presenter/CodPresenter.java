@@ -25,7 +25,7 @@ public class CodPresenter {
     public void isCodAvailable() {
         codView.onStartLoading();
         Address address = SharedPrefsUtil.getAddress();
-        final Call<ResponseBody> call = RetrofitHandler.getApiService().isCodAvailable(address.getEmail(), address.getMobile());
+        final Call<ResponseBody> call = RetrofitHandler.getApiService().isCodAvailable(address.getEmail(), address.getMobile(), address.getPincode());
         RequestHandler.getInstance().createCall(codView, call, new RequestHandler.RequestCallback() {
             @Override
             public void onSuccess(Object o) {

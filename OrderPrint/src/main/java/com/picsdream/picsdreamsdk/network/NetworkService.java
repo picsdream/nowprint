@@ -38,5 +38,5 @@ public interface NetworkService {
 
     @NonNull
     @GET(Constants.URL_IS_COD_AVAILABLE)
-    Call<ResponseBody> isCodAvailable(@Query("email") String email, @Query("mobile") String mobile);
+    Call<ResponseBody> isCodAvailable(@Query("email") String email, @Query("mobile") String mobile, @Query("pincode") String pincode);
 }
