@@ -26,4 +26,6 @@ android {
 dependencies {
     compile project(':OrderPrint')
     compile 'com.zhihu.android:matisse:0.4.3'
+    compile 'com.google.android.gms:play-services-analytics:11.0.4'
+
 }

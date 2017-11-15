@@ -7,6 +7,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.picsdream.picsdreamsdk.util.AnalyticsTrackers;
 import com.picsdream.picsdreamsdk.util.OrderPrint;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
@@ -53,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializePicsDream(Uri uri) {
+        AnalyticsTrackers analyticsTrackers = AnalyticsTrackers.getInstance();;
+        Tracker t = GoogleAnalytics.getInstance(getApplicationContext()).newTracker("UA-109712092-1");
+
+        // Build and send an Event.
+        t.send(new HitBuilders.EventBuilder().setCategory("TEST_CAT").setAction("TEST FROM INIT").setLabel("HELLO").build());
         OrderPrint.getInstance()
                 .with(this.getApplication())
                 .returnBackActivity(MainActivity.class)

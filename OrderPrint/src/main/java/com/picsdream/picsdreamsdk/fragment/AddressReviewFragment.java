@@ -112,10 +112,8 @@ public class AddressReviewFragment extends BaseFragment implements View.OnClickL
     public void onCodSuccess(CodResponse codResponse) {
         paymentLayout.setVisibility(View.VISIBLE);
         if (SharedPrefsUtil.getCountry().getCountry().equalsIgnoreCase("India")) {
-            ContextProvider.trackEvent(APP_KEY, "Payment Init PayTm", "");
             tvPayOnline.setText("Pay with PayTm");
         } else {
-            ContextProvider.trackEvent(APP_KEY, "Payment Init PayPal", "");
             tvPayOnline.setText("Pay with PayPal");
         }
 
