@@ -23,7 +23,7 @@ ext {
     siteUrl = 'https://github.com/picsdream/nowprint'
     gitUrl = 'https://github.com/picsdream/nowprint.git'
 
-    libraryVersion = '1.0.17'
+    libraryVersion = '1.0.18'
 
     developerId = 'raj.ankur'
     developerName = 'Raj Ankur'

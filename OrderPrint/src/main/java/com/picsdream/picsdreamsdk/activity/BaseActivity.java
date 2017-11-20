@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
+import com.picsdream.picsdreamsdk.model.request.Address;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 
 /**
