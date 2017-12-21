@@ -14,6 +14,12 @@ public class Item extends SelectableItem {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("desc")
+    @Expose
+    private String desc;
+    @SerializedName("enable_text")
+    @Expose
+    private Integer enable = 1;
     @SerializedName("media_heading")
     @Expose
     private String mediaHeading;
@@ -96,5 +102,21 @@ public class Item extends SelectableItem {
 
     public void setSizeGuideUrls(List<String> sizeGuideUrls) {
         this.sizeGuideUrls = sizeGuideUrls;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public Integer getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Integer enable) {
+        this.enable = enable;
     }
 }

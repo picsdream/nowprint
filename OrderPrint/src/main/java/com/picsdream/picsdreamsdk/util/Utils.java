@@ -2,9 +2,11 @@ package com.picsdream.picsdreamsdk.util;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -15,13 +17,18 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.activity.BaseActivity;
+import com.picsdream.picsdreamsdk.activity.CallActivity;
 import com.picsdream.picsdreamsdk.activity.EmailPhotoActivity;
+import com.picsdream.picsdreamsdk.activity.NotificationsActivity;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.Country;
 import com.picsdream.picsdreamsdk.model.Region;
@@ -32,8 +39,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-
-import io.intercom.android.sdk.Intercom;
 
 /**
  * Authored by vipulkumar on 02/09/17.
@@ -250,7 +255,7 @@ public class Utils {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(),
-                                "Call initiated", "Call dialog confirmed");
+                                "Call Initiated", "Call dialog confirmed");
                         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + contact));
                         context.startActivity(intent);
                         dialogInterface.dismiss();
@@ -260,7 +265,7 @@ public class Utils {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(),
-                                "Call cancelled", "Call dialog cancel");
+                                "Call Cancelled", "Call dialog cancel");
                         dialogInterface.dismiss();
                     }
                 }).show();
@@ -286,23 +291,54 @@ public class Utils {
 
     public static void onHelpItemsClicked(MenuItem item, BaseActivity activity, String screen) {
         if (item.getItemId() == R.id.menu_call) {
-            ContextProvider.trackEvent(activity.APP_KEY, "Call button", screen);
-            Utils.intiateCall(activity);
+            ContextProvider.trackEvent(activity.APP_KEY, "Support Button", screen);
+            onSupportClicked(activity, screen);
         } else if (item.getItemId() == R.id.menu_email) {
-            ContextProvider.trackEvent(activity.APP_KEY, "Email button", screen);
+            ContextProvider.trackEvent(activity.APP_KEY, "Email Eutton", screen);
             onEmailClicked(activity);
-        } else if (item.getItemId() == R.id.menu_chat) {
-            ContextProvider.trackEvent(activity.APP_KEY, "Chat button", screen);
-            launchIntercom();
+        } else if(item.getItemId() == R.id.menu_notification) {
+            ContextProvider.trackEvent(activity.APP_KEY, "Notifications Button", screen);
+            onNotificationClicked(activity);
         }
-    }
-
-    public static void launchIntercom() {
-        Intercom.client().setLauncherVisibility(Intercom.Visibility.GONE);
-        Intercom.client().displayConversationsList();
     }
 
     public static void onEmailClicked(Context context) {
         NavigationUtil.startActivity(context, EmailPhotoActivity.class);
+    }
+
+    public static void onNotificationClicked(Context context) {
+        InitialAppDataResponse initialAppDataResponse = SharedPrefsUtil.getInitialDataResponse();
+        if(initialAppDataResponse.getNotifications().size() == 0)
+            SaneToast.getToast("You don't have any notifications").show();
+        else
+            NavigationUtil.startActivity(context, NotificationsActivity.class);
+    }
+
+    public static void onSupportClicked(final BaseActivity activity, final String screen) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Need Help?")
+                .setMessage("Request a call back and we'll call you.")
+                .setPositiveButton("Request a Callback", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ContextProvider.trackEvent(activity.APP_KEY, "Call Button", screen);
+                        NavigationUtil.startActivity(activity, CallActivity.class);
+                    }
+                }).show();
+    }
+
+    public static String getScreenNameByTag(String tag) {
+        return Utils.beautifyName(tag.replace("item_tag_", "") + " Screen");
+    }
+
+    public static int dpToPx(int dp) {
+        Resources r = SharedPrefsUtil.getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    public static int notificationCount() {
+        int read = SharedPrefsUtil.getInt("readNotifications", 0);
+        int size = SharedPrefsUtil.getInitialDataResponse().getNotifications().size() - read;
+        return size < 0 ? 0 : size;
     }
 }

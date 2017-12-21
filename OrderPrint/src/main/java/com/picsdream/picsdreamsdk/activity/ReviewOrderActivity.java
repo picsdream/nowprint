@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.picsdream.picsdreamsdk.model.Region;
 import com.picsdream.picsdreamsdk.model.ShippingText;
 import com.picsdream.picsdreamsdk.model.network.CouponsResponse;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
+import com.picsdream.picsdreamsdk.util.Constants;
 import com.picsdream.picsdreamsdk.util.NavigationUtil;
 import com.picsdream.picsdreamsdk.util.SaneToast;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
@@ -81,7 +83,7 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
         tvChangeDiscount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ContextProvider.trackEvent(APP_KEY, "Change promo", "");
+                ContextProvider.trackEvent(APP_KEY, "Change Promo", "");
                 final BottomSheetDialog dialog = new BottomSheetDialog(ReviewOrderActivity.this);
                 dialog.setContentView(R.layout.view_bottomsheet);
                 dialog.show();
@@ -105,12 +107,12 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
                                     validPromo = true;
                                     applyPromo(coupon);
                                     SaneToast.getToast("Promo applied").show();
-                                    ContextProvider.trackEvent(APP_KEY, "Promo applied", "");
+                                    ContextProvider.trackEvent(APP_KEY, "Promo Applied", promoCode);
                                     dialog.dismiss();
                                 }
                             }
                         } else {
-                            ContextProvider.trackEvent(APP_KEY, "Wrong coupon code", "");
+                            ContextProvider.trackEvent(APP_KEY, "Promo Error", promoCode);
                             validPromo = false;
                         }
                         if (!validPromo) {
@@ -159,6 +161,7 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
         SharedPrefsUtil.saveOrder(order);
 
         setValues();
+        ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Order Review Screen", order.getType() + " - " + order.getMedium() + " - " + order.getSize());
     }
 
     private int getShipping() {
@@ -239,12 +242,25 @@ public class ReviewOrderActivity extends BaseActivity implements View.OnClickLis
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_help, menu);
+        final MenuItem menuItem = menu.findItem(R.id.menu_notification);
+        View actionView = menuItem.getActionView();
+        TextView count = (TextView) actionView.findViewById(R.id.notification_pill);
+        int size = Utils.notificationCount();
+        count.setText(String.valueOf(size));
+        if(size == 0)
+            count.setVisibility(View.GONE);
+        actionView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(menuItem);
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Utils.onHelpItemsClicked(item, this, "Review Order");
+        Utils.onHelpItemsClicked(item, this, "Review Order Screen");
         return super.onOptionsItemSelected(item);
     }
 

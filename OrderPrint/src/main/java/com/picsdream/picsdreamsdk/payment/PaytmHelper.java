@@ -120,38 +120,42 @@ public class PaytmHelper {
             @Override
             public void networkNotAvailable() {
                 context.finish();
+                ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Payment Cancelled - PayTM", "Network Not Available");
                 SaneToast.getToast("Not Available").show();
             }
 
             @Override
             public void clientAuthenticationFailed(String s) {
                 context.finish();
+                ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Payment Cancelled - PayTM", "Authentication Failed");
                 SaneToast.getToast("Auth Failed").show();
             }
 
             @Override
             public void someUIErrorOccurred(String s) {
                 context.finish();
+                ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Payment Cancelled - PayTM", s);
                 SaneToast.getToast("UI error").show();
             }
 
             @Override
             public void onErrorLoadingWebPage(int i, String s, String s1) {
                 context.finish();
+                ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Payment Cancelled - PayTM", s);
                 SaneToast.getToast("Error").show();
             }
 
             @Override
             public void onBackPressedCancelTransaction() {
                 context.finish();
-                ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(),
-                        "Payment cancelled", "User cancelled PayTm");
+                ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Payment Cancelled - PayTM", "Cancelled by User");
                 SaneToast.getToast("Payment cancelled").show();
             }
 
             @Override
             public void onTransactionCancel(String s, Bundle bundle) {
                 context.finish();
+                ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Payment Cancelled - PayTM", s);
                 SaneToast.getToast("Cancelled").show();
             }
         });

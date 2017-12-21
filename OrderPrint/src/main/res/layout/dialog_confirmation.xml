@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:layout_width="250dp">
+        <Button android:layout_height="24dp"
+            android:layout_width="24dp"
+            android:background="@drawable/ic_close"
+            android:layout_margin="10dp"
+            android:layout_alignParentRight="true"
+            android:id="@+id/closeButton"
+            />
+        <LinearLayout
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="Do you want to print this photo"
+                android:padding="10dp"/>
+            <ImageView android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/dialogImage" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="No"
+                    android:background="@color/app_red"
+                    android:fontFamily="@string/font_family_medium"
+                    android:gravity="center"
+                    android:padding="@dimen/spacing_medium_2"
+                    android:id="@+id/negativeButton"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/text_regular"
+                    android:clickable="true"
+                    android:textColor="@color/white"/>
+                <Button android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Yes"
+                    android:background="@color/app_green"
+                    android:fontFamily="@string/font_family_medium"
+                    android:gravity="center"
+                    android:padding="@dimen/spacing_medium_2"
+                    android:id="@+id/positiveButton"
+                    android:textAllCaps="true"
+                    android:textSize="@dimen/text_regular"
+                    android:clickable="true"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

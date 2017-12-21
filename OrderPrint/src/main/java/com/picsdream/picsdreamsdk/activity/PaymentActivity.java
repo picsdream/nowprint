@@ -53,15 +53,16 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
     }
 
     private void setupUi() {
+        Order order = SharedPrefsUtil.getOrder();
         isCod = getIntent().getBooleanExtra("isCod", false);
         if (isCod) {
             onPaymentCompleted();
         } else {
             if (SharedPrefsUtil.getCountry().getCountry().equalsIgnoreCase("India")) {
-                ContextProvider.trackEvent(APP_KEY, "Payment Init PayTm", "");
+                ContextProvider.trackEvent(APP_KEY, "Payment Init PayTm", order.getType() + " - " + order.getMedium() + " - " + order.getSize());
                 initPayTm();
             } else {
-                ContextProvider.trackEvent(APP_KEY, "Payment Init PayPal", "");
+                ContextProvider.trackEvent(APP_KEY, "Payment Init PayPal", order.getType() + " - " + order.getMedium() + " - " + order.getSize());
                 initPayPal();
             }
         }
@@ -122,7 +123,7 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
                     }
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                ContextProvider.trackEvent(APP_KEY, "Payment cancelled", "User cancelled PayPal");
+                ContextProvider.trackEvent(APP_KEY, "Payment Cancelled - PayPal", "Cancelled by User");
                 PaymentActivity.this.finish();
                 SaneToast.getToast("Payment was cancelled").show();
             } else if (resultCode == com.paypal.android.sdk.payments.PaymentActivity.RESULT_EXTRAS_INVALID) {
@@ -132,6 +133,7 @@ public class PaymentActivity extends BaseActivity implements PaytmChecsumView {
     }
 
     private void onPaymentError() {
+        ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Payment Cancelled - PayPal", "Unknown Error");
         SaneToast.getToast("Some error occurred. Please try again.").show();
         PaymentActivity.this.finish();
     }

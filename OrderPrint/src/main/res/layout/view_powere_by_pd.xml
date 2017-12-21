@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_gravity="right"
-        android:fontFamily="@string/font_family_medium"
+        android:fontFamily="@string/font_family_regular"
         android:padding="8dp"
-        android:text="Powered by PicsDream"
+        android:text="Powered by Picsdream"
         android:textColor="@color/picsDreamTextDark"
-        android:textSize="12sp" />
+        android:textSize="11sp" />
 </RelativeLayout>

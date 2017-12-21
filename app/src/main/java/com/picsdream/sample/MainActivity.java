@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -22,12 +24,64 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_CHOOSE = 200;
     private List<Uri> mSelected;
+    Button nav1, nav2, nav3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initializeMatisse();
+
+        Intent intent = getIntent();
+
+        nav1 = (Button) findViewById(R.id.nav1);
+        nav2 = (Button) findViewById(R.id.nav2);
+        nav3 = (Button) findViewById(R.id.nav3);
+        OrderPrint.getInstance()
+                .with(getApplication())
+                .returnBackActivity(MainActivity.class)
+                .runInSandboxMode(false)
+                .initialize("1512208588730720430");
+
+        if(intent.getStringExtra("source") != null) {
+            if(intent.getStringExtra("source").equals("")) {
+                OrderPrint.getInstance()
+                        .intro(this, MainActivity.class);
+            }
+        } else {
+            OrderPrint.getInstance()
+                    .intro(this, MainActivity.class);
+        }
+
+        nav1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initializeMatisse();
+            }
+        });
+
+        nav2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OrderPrint.getInstance()
+                        .with(getApplication())
+                        .returnBackActivity(MainActivity.class)
+                        .runInSandboxMode(false)
+                        .initialize("1512208616410566060");
+                initializeMatisse();
+            }
+        });
+
+        nav3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OrderPrint.getInstance()
+                        .with(getApplication())
+                        .returnBackActivity(MainActivity.class)
+                        .runInSandboxMode(false)
+                        .initialize("1512208639687917315");
+                initializeMatisse();
+            }
+        });
     }
 
     @Override
@@ -57,18 +111,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializePicsDream(Uri uri) {
-        AnalyticsTrackers analyticsTrackers = AnalyticsTrackers.getInstance();;
+        AnalyticsTrackers analyticsTrackers = AnalyticsTrackers.getInstance();
         Tracker t = GoogleAnalytics.getInstance(getApplicationContext()).newTracker("UA-109712092-1");
 
         // Build and send an Event.
         t.send(new HitBuilders.EventBuilder().setCategory("TEST_CAT").setAction("TEST FROM INIT").setLabel("HELLO").build());
-        OrderPrint.getInstance()
-                .with(this.getApplication())
-                .returnBackActivity(MainActivity.class)
-                .runInSandboxMode(false)
-                .initialize("43748398643785726");
 
-        OrderPrint.getInstance()
-                .ImageUri(uri).launch(this);
+        OrderPrint.getInstance().ImageUri(uri).ad(this);
+
+//        OrderPrint.getInstance()
+//                .ImageUri(uri).launch(this);
     }
 }

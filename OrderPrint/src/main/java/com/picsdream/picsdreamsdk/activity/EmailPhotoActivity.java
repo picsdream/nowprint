@@ -43,6 +43,8 @@ public class EmailPhotoActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setupToolbar(toolbar);
         etEmail = findViewById(R.id.etEmail);
+        etEmail.setText(SharedPrefsUtil.getString("email", ""));
+
         proceedLayout = findViewById(R.id.proceedLayout);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Sending email...");
@@ -51,6 +53,7 @@ public class EmailPhotoActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if (ValidationUtil.validateEmail(etEmail)) {
+                    SharedPrefsUtil.setString("email", etEmail.getText().toString());
                     uploadPhoto();
                 }
             }
@@ -106,10 +109,10 @@ public class EmailPhotoActivity extends BaseActivity {
 
     private void onUploadPhotoFailure() {
         SaneToast.getToast("Something went wrong. Please try again").show();
-
     }
 
     private void onUploadPhotoSuccess() {
+        ContextProvider.trackEvent(APP_KEY, "Email Sent", etEmail.getText().toString());
         SaneToast.getToast("Photo emailed to you successfully.").show();
         this.finish();
     }

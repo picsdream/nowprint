@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -24,6 +25,7 @@ import com.picsdream.picsdreamsdk.presenter.ImageRenderPresenter;
 import com.picsdream.picsdreamsdk.util.SaneToast;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 import com.picsdream.picsdreamsdk.view.ImageRenderView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -35,11 +37,12 @@ import java.util.List;
 
 public class ImageFragment extends BaseFragment implements ImageRenderView {
     private ImageRenderPresenter imageRenderPresenter;
-    private ProgressBar progressBar;
+    private LinearLayout progressBar, retryBtn;
     private static ArrayList<String> imagesToShow = new ArrayList<>();
     private ViewPager viewPager;
     private SmartTabLayout smartTabs;
     private RenderedImagePagerAdapter renderedImagePagerAdapter;
+    private static Medium medium;
 
     public static ImageFragment newInstance() {
         Bundle args = new Bundle();
@@ -64,9 +67,17 @@ public class ImageFragment extends BaseFragment implements ImageRenderView {
 
     private void setupUi(View view) {
         progressBar = view.findViewById(R.id.progressBar);
+        retryBtn = view.findViewById(R.id.retryBtn);
         viewPager = view.findViewById(R.id.viewPager);
         progressBar.setVisibility(View.GONE);
         setUpTabs(view);
+
+        retryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadPhoto();
+            }
+        });
     }
 
     private void setImagesToShow(ArrayList<String> storedImageUrls) {
@@ -85,15 +96,20 @@ public class ImageFragment extends BaseFragment implements ImageRenderView {
 
     public void onItemSelected(SelectableItem selectableItem) {
         if (selectableItem instanceof Medium) {
+            medium = ((Medium) selectableItem);
             ArrayList<String> storedImageUrls = getStoredImageUrl((Medium) selectableItem);
             if (storedImageUrls != null) {
                 setImagesToShow(storedImageUrls);
             } else {
-                imageRenderPresenter.getRenderedImageHttp(SharedPrefsUtil.getImageUriString(),
-                        SharedPrefsUtil.getOrder().getType(),
-                        ((Medium) selectableItem).getName());
+                loadPhoto();
             }
         }
+    }
+
+    private void loadPhoto() {
+        retryBtn.setVisibility(View.GONE);
+        String imageUri = SharedPrefsUtil.getImageUriString();
+        imageRenderPresenter.getRenderedImageHttp(imageUri, SharedPrefsUtil.getOrder().getType(), medium.getName());
     }
 
     private ArrayList<String> getStoredImageUrl(Medium medium) {
@@ -111,11 +127,13 @@ public class ImageFragment extends BaseFragment implements ImageRenderView {
 
     @Override
     public void onImageRenderFailure(Error error) {
+        retryBtn.setVisibility(View.VISIBLE);
         SaneToast.getToast(error.getErrorBody()).show();
     }
 
     @Override
     public void onImageRenderSuccess(ImageRenderResponse imageRenderResponse) {
+        retryBtn.setVisibility(View.GONE);
         setImagesToShow((ArrayList<String>) imageRenderResponse.getImages());
         saveRenderedImage(imageRenderResponse);
     }

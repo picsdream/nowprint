@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    tools:context="com.picsdream.picsdreamsdk.activity.CallActivity">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        app:theme="@style/ToolBarMasterStyleLight"
+        app:title=""
+        app:titleTextAppearance="@style/Toolbar.TitleTextMasterLight" />
+
+    <TextView
+        android:id="@+id/tvLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_margin="24dp"
+        android:lineSpacingExtra="2dp"
+        android:text="Please enter your mobile number so that our customer service representative can call you back."
+        android:textColor="@color/picsDreamTextDark" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/proceedLayout"
+        android:layout_below="@+id/tvLabel"
+        android:layout_margin="24dp">
+
+        <EditText
+            android:id="@+id/etMobile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:paddingBottom="16dp"
+            android:textColor="@color/picsDreamTextDark"
+            android:textColorHint="@color/picsDreamTextMedium" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/proceedLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvProceed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_btn_bottom_accent"
+            android:fontFamily="@string/font_family_medium"
+            android:gravity="center"
+            android:padding="@dimen/spacing_medium_2"
+            android:text="Request Callback"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_regular" />
+    </LinearLayout>
+</RelativeLayout>

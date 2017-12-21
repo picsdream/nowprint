@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "555177226234",
+    "firebase_url": "https://sample-app2-620c8.firebaseio.com",
+    "project_id": "sample-app2-620c8",
+    "storage_bucket": "sample-app2-620c8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555177226234:android:d16dfdc0401939cf",
+        "android_client_info": {
+          "package_name": "com.picsdream.sample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "555177226234-e4unt7og5q033loav98dppjf4238uncc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAw0p81NQ-3k3XzIJha5fjeH9f0ASEGEWI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

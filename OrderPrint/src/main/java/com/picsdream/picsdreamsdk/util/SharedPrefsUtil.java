@@ -32,7 +32,7 @@ public final class SharedPrefsUtil {
     }
 
     @NonNull
-    private static Resources getResources() {
+    public static Resources getResources() {
         return getContext().getResources();
     }
 
@@ -55,6 +55,14 @@ public final class SharedPrefsUtil {
 
     public static void setString(String key, String value) {
         edit().putString(key, value).apply();
+    }
+
+    public static int getInt(String key, int defaultValue) {
+        return getPreferences().getInt(key, defaultValue);
+    }
+
+    public static void setInt(String key, int value) {
+        edit().putInt(key, value).apply();
     }
 
     public static InitialAppDataResponse getInitialDataResponse() {

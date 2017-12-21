@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,10 @@ public class PrefFragment extends BaseFragment implements OnMobileCoverSelector 
         Utils.setRecyclerViewProperties(getContext(), recyclerViewMedia, LinearLayoutManager.HORIZONTAL);
         PrefsAdapter prefsAdapter = new PrefsAdapter(getContext(), items);
         recyclerViewMedia.setAdapter(prefsAdapter);
-
+        Order order = SharedPrefsUtil.getOrder();
+        if(tag.equals("item_tag_size")) {
+            ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), Utils.getScreenNameByTag(tag), order.getMedium());
+        }
         tvLabel.setText(getFragmentLabel(tag));
     }
 

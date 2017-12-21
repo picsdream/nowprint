@@ -11,7 +11,7 @@ public class Address {
     private String name;
     @SerializedName("email")
     @Expose
-    private String email;
+    private String email = "";
     @SerializedName("address")
     @Expose
     private String address;
@@ -27,7 +27,7 @@ public class Address {
     @SerializedName("country")
     @Expose
     private String country;
-    private String mobile;
+    private String mobile = "";
 
     public String getName() {
         return name;

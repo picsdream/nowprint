@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:fillViewport="true">
 
     <LinearLayout
@@ -23,7 +24,7 @@
                 android:fontFamily="@string/font_family_regular"
                 android:text="Delivering to"
                 android:textColor="@color/picsDreamTextMedium"
-                android:textSize="14sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tvFullName"
@@ -34,7 +35,7 @@
                 android:lineSpacingExtra="4dp"
                 android:text="Vipul Kumar"
                 android:textColor="@color/picsDreamTextDark"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tvAddress"
@@ -51,10 +52,10 @@
                 android:id="@+id/tv_change"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
                 android:layout_marginTop="12dp"
                 android:fontFamily="@string/font_family_medium"
                 android:padding="12dp"
+                android:layout_gravity="right"
                 android:text="Change Address"
                 android:textColor="?colorPrimary"
                 android:textSize="14sp" />
@@ -81,15 +82,27 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_bg_review_item"
                     android:padding="@dimen/spacing_medium">
-
-                    <TextView
-                        android:id="@+id/tvPayOnlineHeading"
-                        android:layout_width="wrap_content"
+                    <LinearLayout android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:fontFamily="@string/font_family_medium"
-                        android:text="Pay Using PayTm"
-                        android:textColor="@color/picsDreamTextDark" />
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/tvPayOnlineHeading"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@string/font_family_regular"
+                            android:text="Pay Online (Debit/Credit Card, Net Banking)"
+                            android:textColor="@color/picsDreamTextDark" />
+                        <TextView
+                            android:id="@+id/tvPayOnlineHeadingSupport"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@string/font_family_regular"
+                            android:text="Secured with PayTM"
+                            android:textColor="@color/picsDreamTextMedium"
+                            android:textSize="12sp"/>
+                    </LinearLayout>
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -113,7 +126,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:fontFamily="@string/font_family_medium"
+                        android:fontFamily="@string/font_family_regular"
                         android:text="Pay Cash On Delivery"
                         android:textColor="@color/picsDreamTextDark" />
 

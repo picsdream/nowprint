@@ -69,6 +69,7 @@ public class PurchasePresenter {
     }
 
     public void uploadPhoto(final PurchaseResponse purchaseResponse) {
+        String size = "";
         AsyncHttpClient client = new AsyncHttpClient();
         Address address = SharedPrefsUtil.getAddress();
 
@@ -78,13 +79,16 @@ public class PurchasePresenter {
         params.put("order_no", purchaseResponse.getOrderNo());
         params.put("invoice_id", purchaseResponse.getInvoiceId());
         try {
-            params.put("media[0]", getFilesArray());
+            File[] files = getFilesArray();
+            size = String.valueOf(files[0].length() / 1024) + "KB";
+            params.put("media[0]", files);
         } catch (FileNotFoundException e) {
             SaneToast.getToast("Ex").show();
             e.printStackTrace();
         }
         params.put("ids[0]", purchaseResponse.getMediaIds().get1());
 
+        final String finalSize = size;
         client.post("https://www.picsdream.com/api/v1/purchase/upload", params, new AsyncHttpResponseHandler() {
 
             @Override
@@ -95,12 +99,12 @@ public class PurchasePresenter {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                 UploadPhotoResponse uploadPhotoResponse = new Gson().fromJson(new String(response), UploadPhotoResponse.class);
-                purchaseView.onUploadPhotoSuccess(uploadPhotoResponse);
+                purchaseView.onUploadPhotoSuccess(uploadPhotoResponse, finalSize);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                purchaseView.onUploadPhotoFailure(purchaseResponse);
+                purchaseView.onUploadPhotoFailure(purchaseResponse, finalSize);
             }
 
             @Override

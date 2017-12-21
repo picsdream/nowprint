@@ -5,15 +5,21 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.picsdream.picsdreamsdk.R;
+import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.fragment.AddressFragment;
 import com.picsdream.picsdreamsdk.fragment.AddressReviewFragment;
+import com.picsdream.picsdreamsdk.model.Order;
+import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
 import com.picsdream.picsdreamsdk.model.request.Address;
+import com.picsdream.picsdreamsdk.util.Constants;
 import com.picsdream.picsdreamsdk.util.NavigationUtil;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 import com.picsdream.picsdreamsdk.util.Utils;
@@ -71,6 +77,10 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         setupToolbar(toolbar);
 
         proceedLayout.setOnClickListener(this);
+
+        Order order = SharedPrefsUtil.getOrder();
+
+        ContextProvider.trackEvent(APP_KEY, "Address Form Screen", order.getType() + " - " + order.getMedium() + " - " + order.getSize());
     }
 
     @Override
@@ -91,12 +101,25 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_help, menu);
+        final MenuItem menuItem = menu.findItem(R.id.menu_notification);
+        View actionView = menuItem.getActionView();
+        TextView count = (TextView) actionView.findViewById(R.id.notification_pill);
+        int size = Utils.notificationCount();
+        count.setText(String.valueOf(size));
+        if(size == 0)
+            count.setVisibility(View.GONE);
+        actionView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(menuItem);
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Utils.onHelpItemsClicked(item, this, "Address screen");
+        Utils.onHelpItemsClicked(item, this, "Address Screen");
         return super.onOptionsItemSelected(item);
     }
 }

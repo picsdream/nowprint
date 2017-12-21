@@ -1,15 +1,23 @@
 package com.picsdream.picsdreamsdk.util;
 
 public interface Constants {
+    String TAG = "---------> OrderAPrint";
+
     String URL_INITIAL_APP_DATA = "moments";
     String URL_GET_AVAILABLE_COUPONS = "coupons";
+    String URL_REQUEST_CALL = "callback";
     String URL_GENERATE_PAYTM_CHECKSUM =
             "paytm/generate";
     String URL_POST_PURCHASE_ITEM = "purchase";
     String URL_IS_COD_AVAILABLE = "purchase/is-cod";
     String URL_POST_UPLOAD_PHOT0 = "pi";
-    String BASE_URL = "https://www.picsdream.com/api/v1/";
 
+    String URL_GET_ADDRESS = "users/address";
+
+    String URL_REGISTER_DEVICE = "users/address";
+
+    String BASE_URL = "https://www.picsdream.com/api/v1/";
+    String URL_BEFORE_APP_DATA = BASE_URL + "moments/before";
     String ITEM_FRAGMENT_TAG = "item_tag";
     String TAG_TYPE = "item_tag_type";
     String TAG_MEDIA = "item_tag_media";

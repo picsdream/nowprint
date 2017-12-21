@@ -2,6 +2,7 @@ package com.picsdream.picsdreamsdk.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +10,17 @@ import android.view.ViewGroup;
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.request.Address;
+import com.picsdream.picsdreamsdk.presenter.AddressPresenter;
+import com.picsdream.picsdreamsdk.util.Constants;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 import com.picsdream.picsdreamsdk.util.ValidationUtil;
+import com.picsdream.picsdreamsdk.view.AddressView;
 
 /**
  * Authored by vipulkumar on 28/08/17.
  */
 
-public class AddressFragment extends BaseFragment {
+public class AddressFragment extends BaseFragment implements View.OnFocusChangeListener, AddressView {
     private android.widget.EditText etEmail;
     private android.widget.EditText etMobile;
     private android.widget.EditText etFullName;
@@ -25,6 +29,9 @@ public class AddressFragment extends BaseFragment {
     private android.widget.EditText etState;
     private android.widget.EditText etPincode;
     private android.widget.EditText etCountry;
+
+    private AddressPresenter addressPresenter;
+    private boolean fetchAddress = true;
 
     public static AddressFragment newInstance() {
         Bundle args = new Bundle();
@@ -42,8 +49,10 @@ public class AddressFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        addressPresenter = new AddressPresenter(this);
         findViewsById(view);
         etCountry.setText(SharedPrefsUtil.getCountry().getCountry());
+        populateAddress();
     }
 
     public boolean validateUserInfo() {
@@ -75,6 +84,7 @@ public class AddressFragment extends BaseFragment {
         address.setCity(etCity.getText().toString());
         address.setState(etState.getText().toString());
         address.setPincode(etPincode.getText().toString());
+        ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Save Address", etFullName.getText().toString() + " - " + etMobile.getText().toString() + " - " + etEmail.getText().toString());
         SharedPrefsUtil.setAddress(address);
     }
 
@@ -87,11 +97,58 @@ public class AddressFragment extends BaseFragment {
         this.etMobile = view.findViewById(R.id.etMobile);
         this.etEmail = view.findViewById(R.id.etEmail);
         this.etCountry = view.findViewById(R.id.etCountry);
+
+        this.etEmail.setOnFocusChangeListener(this);
+        this.etMobile.setOnFocusChangeListener(this);
+    }
+
+    public void populateAddress() {
+        Address address = SharedPrefsUtil.getAddress();
+        if(address == null) {
+            etEmail.setText(SharedPrefsUtil.getString("email", ""));
+            etMobile.setText(SharedPrefsUtil.getString("mobile", ""));
+            return;
+        }
+        etCity.setText(address.getCity());
+        etAddress.setText(address.getAddress());
+        etState.setText(address.getState());
+        etPincode.setText(address.getPincode());
+        etFullName.setText(address.getName());
+        etMobile.setText(address.getMobile());
+        etEmail.setText(address.getEmail());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         ContextProvider.trackScreenView("Enter Address");
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if((v.getId() == R.id.etMobile || v.getId() == R.id.etEmail) && fetchAddress == true) {
+            addressPresenter.getAddress(etEmail.getText().toString(), etMobile.getText().toString());
+        }
+    }
+
+    @Override
+    public void onAddressFetchSuccess(Address address) {
+        if(address == null)
+            return;
+        fetchAddress = false;
+        etCity.setText(address.getCity());
+        etAddress.setText(address.getAddress());
+        etState.setText(address.getState());
+        etPincode.setText(address.getPincode());
+        etFullName.setText(address.getName());
+        if(address.getMobile() != null && address.getMobile().length() > 0)
+            etMobile.setText(address.getMobile());
+        if(address.getEmail().length() > 0 && address.getEmail().length() > 0)
+            etEmail.setText(address.getEmail());
+    }
+
+    @Override
+    public void onAddressFetchError() {
+
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.picsdream.picsdreamsdk.model.CodResponse;
 import com.picsdream.picsdreamsdk.model.request.Address;
 import com.picsdream.picsdreamsdk.network.Error;
 import com.picsdream.picsdreamsdk.presenter.CodPresenter;
+import com.picsdream.picsdreamsdk.util.Constants;
 import com.picsdream.picsdreamsdk.util.NavigationUtil;
 import com.picsdream.picsdreamsdk.util.SaneToast;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
@@ -35,7 +37,7 @@ public class AddressReviewFragment extends BaseFragment implements View.OnClickL
     private CodPresenter codPresenter;
     private ProgressBar progressBar;
     private ViewGroup paymentLayout;
-    private TextView tvPayOnline;
+    private TextView tvPayOnline, tvPayOnlineSupport;
     private ViewGroup payCodLayout, payOnlineLayout;
 
     public static AddressReviewFragment newInstance() {
@@ -63,6 +65,7 @@ public class AddressReviewFragment extends BaseFragment implements View.OnClickL
         payCodLayout = view.findViewById(R.id.payCodLayout);
         payOnlineLayout = view.findViewById(R.id.payOnlineLayout);
         tvPayOnline = view.findViewById(R.id.tvPayOnlineHeading);
+        tvPayOnlineSupport = view.findViewById(R.id.tvPayOnlineHeadingSupport);
         paymentLayout.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         codPresenter = new CodPresenter(this);
@@ -112,9 +115,11 @@ public class AddressReviewFragment extends BaseFragment implements View.OnClickL
     public void onCodSuccess(CodResponse codResponse) {
         paymentLayout.setVisibility(View.VISIBLE);
         if (SharedPrefsUtil.getCountry().getCountry().equalsIgnoreCase("India")) {
-            tvPayOnline.setText("Pay with PayTm");
+            tvPayOnline.setText("Pay Online (Debit/Credit Card, Net Banking)");
+            tvPayOnlineSupport.setText("Secured with PayTM");
         } else {
             tvPayOnline.setText("Pay with PayPal");
+            tvPayOnlineSupport.setText("");
         }
 
         if (codResponse.getEnabled() == 1) {
@@ -141,7 +146,7 @@ public class AddressReviewFragment extends BaseFragment implements View.OnClickL
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(),
-                                        "Proceed with COD", "COD dialog confirm");
+                                        "Proceed with COD", "COD Dialog Confirmed by User");
                                 Intent intent = new Intent(getActivity(), PaymentActivity.class);
                                 intent.putExtra("isCod", true);
                                 NavigationUtil.startActivity(getContext(), intent);
@@ -152,7 +157,7 @@ public class AddressReviewFragment extends BaseFragment implements View.OnClickL
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(),
-                                        "COD cancelled", "COD dialog cancel");
+                                        "COD Cancelled", "COD Dialog Cancelled by User");
                                 dialogInterface.dismiss();
                             }
                         }).show();

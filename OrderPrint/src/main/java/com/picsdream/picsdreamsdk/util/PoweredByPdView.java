@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.picsdream.picsdreamsdk.R;
+import com.picsdream.picsdreamsdk.application.ContextProvider;
 
 /**
  * Authored by vipulkumar on 03/11/17.
@@ -52,6 +53,7 @@ public class PoweredByPdView extends LinearLayout {
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Powered By Picsdream", "");
                 Uri uri = Uri.parse("https://www.picsdream.com/moments?utm_source=partnership&utm_medium=SDK");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 context.startActivity(intent);

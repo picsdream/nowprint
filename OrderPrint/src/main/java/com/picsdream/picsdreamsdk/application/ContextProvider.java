@@ -9,8 +9,6 @@ import com.google.android.gms.analytics.Tracker;
 import com.picsdream.picsdreamsdk.util.AnalyticsTrackers;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 
-import io.intercom.android.sdk.Intercom;
-
 /**
  * Authored by vipulkumar on 02/09/17.
  */
@@ -25,12 +23,6 @@ public class ContextProvider {
             AnalyticsTrackers.initialize(application);
         }
         AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
-        initIntercom(application);
-    }
-
-    private static void initIntercom(Application application) {
-        Intercom.initialize(application, "android_sdk-af3ba9f907a65bd5166d23ad1c3aafe825984c9b", "l7wg2suf");
-        Intercom.client().registerUnidentifiedUser();
     }
 
     public ContextProvider() {

@@ -4,14 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.activity.PrefsActivity;
+import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.picsdream.picsdreamsdk.model.Item;
+import com.picsdream.picsdreamsdk.model.Medium;
 import com.picsdream.picsdreamsdk.model.Order;
 import com.picsdream.picsdreamsdk.util.Constants;
 import com.picsdream.picsdreamsdk.util.NavigationUtil;
@@ -46,6 +50,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.PrefVi
 
     private void setValues(final PrefViewHolder holder) {
         final Item product = productsList.get(holder.getAdapterPosition());
+        if(product.getEnable() != 0) {
+            holder.tvHeading.setText(product.getName());
+            holder.tvDesc.setText(product.getDesc());
+        }
         Picasso.with(context)
                 .load(product.getImageThumb())
                 .into(holder.ivImage);
@@ -55,6 +63,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.PrefVi
                 Order order = SharedPrefsUtil.getOrder();
                 order.setType(product.getType());
                 SharedPrefsUtil.saveOrder(order);
+                ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Type", product.getName());
                 Intent intent = new Intent(context, PrefsActivity.class);
                 intent.putExtra("tag", Constants.TAG_MEDIA);
                 NavigationUtil.startActivity(context, intent);
@@ -85,6 +94,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.PrefVi
     static class PrefViewHolder extends RecyclerView.ViewHolder {
         ViewGroup rootLayout;
         ImageView ivImage;
+        TextView tvHeading, tvDesc;
 
         private PrefViewHolder(@NonNull View view) {
             super(view);
@@ -94,6 +104,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.PrefVi
         private void findViewById(@NonNull View view) {
             rootLayout = view.findViewById(R.id.root_layout);
             ivImage = view.findViewById(R.id.ivImage);
+            tvHeading = view.findViewById(R.id.tvHeading);
+            tvDesc = view.findViewById(R.id.tvDesc);
         }
     }
 }

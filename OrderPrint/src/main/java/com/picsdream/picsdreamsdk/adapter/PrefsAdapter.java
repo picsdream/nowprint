@@ -9,6 +9,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.picsdream.picsdreamsdk.model.Order;
 import com.picsdream.picsdreamsdk.model.Price;
 import com.picsdream.picsdreamsdk.model.SelectableItem;
 import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
+import com.picsdream.picsdreamsdk.util.Constants;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 import com.picsdream.picsdreamsdk.util.Utils;
 import com.squareup.picasso.Picasso;
@@ -77,11 +79,16 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
                         .fit().centerCrop()
                         .into(holder.ivImage);
                 holder.ivImage.setVisibility(View.VISIBLE);
-                holder.tvLabel.setVisibility(View.INVISIBLE);
-                holder.tvSubLabel.setVisibility(View.INVISIBLE);
                 holder.tvLabelOnImage.setVisibility(View.INVISIBLE);
             } else {
                 holder.ivImage.setVisibility(View.INVISIBLE);
+            }
+            if(((Medium) selectableItem).getSupportText().length() > 0) {
+                holder.tvLabel.setVisibility(View.VISIBLE);
+                holder.tvSubLabel.setVisibility(View.VISIBLE);
+                holder.tvLabel.setText(((Medium) selectableItem).getSupportText());
+                holder.tvSubLabel.setText(((Medium) selectableItem).getSupportSubText());
+            } else {
                 holder.tvLabel.setVisibility(View.INVISIBLE);
                 holder.tvSubLabel.setVisibility(View.INVISIBLE);
             }
@@ -118,15 +125,15 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
             postSelectionToActivity(selectableItem);
             holder.tvLabel.setTextColor(context.getResources().getColor(R.color.picsDreamTextDark));
             holder.tvLabelOnImage.setTextColor(context.getResources().getColor(R.color.white));
-            holder.tvSubLabel.setTextColor(context.getResources().getColor(R.color.picsDreamTextMedium));
+            holder.tvSubLabel.setTextColor(context.getResources().getColor(R.color.picsDreamTextDark));
             holder.itemCard.setCardElevation(20f);
             changeCardBackgroundColor(context.getResources().getColor(R.color.white),
                     Utils.fetchPrimaryColor(context),
                     holder.itemCard);
         } else {
-            holder.tvLabel.setTextColor(context.getResources().getColor(R.color.picsDreamTextLight));
-            holder.tvSubLabel.setTextColor(context.getResources().getColor(R.color.picsDreamTextLight));
-            holder.tvLabelOnImage.setTextColor(context.getResources().getColor(R.color.picsDreamTextLight));
+            holder.tvLabel.setTextColor(context.getResources().getColor(R.color.picsDreamTextMedium));
+            holder.tvSubLabel.setTextColor(context.getResources().getColor(R.color.picsDreamTextMedium));
+            holder.tvLabelOnImage.setTextColor(context.getResources().getColor(R.color.picsDreamTextMedium));
             holder.itemCard.setCardElevation(5f);
             holder.itemCard.setCardBackgroundColor(context.getResources().getColor(R.color.white));
         }
@@ -167,12 +174,16 @@ public class PrefsAdapter extends RecyclerView.Adapter<PrefsAdapter.PrefViewHold
     }
 
     private void trackSelectionEvent(SelectableItem selectableItem) {
+        Order order = SharedPrefsUtil.getOrder();
         if (selectableItem instanceof Item) {
-            ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Type", ((Item) selectableItem).getName());
+            String label = ((Item) selectableItem).getName() + " - " + order.getMedium() + " - " +  order.getSize();
+            ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Type", label);
         } else if (selectableItem instanceof Medium) {
-            ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Medium", ((Medium) selectableItem).getName());
+            String label = order.getType() + " - " + ((Medium) selectableItem).getText() + " - " +  order.getSize();
+            ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Medium", label);
         } else if (selectableItem instanceof Price) {
-            ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Size", ((Price) selectableItem).getSize());
+            String label = order.getType() + " - " + order.getMedium() + " - " +  ((Price) selectableItem).getSize();
+            ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Size", label);
         }
     }
 

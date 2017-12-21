@@ -5,10 +5,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.fragment.ImageFragment;
@@ -26,6 +28,7 @@ public class PrefsActivity extends BaseActivity implements View.OnClickListener 
     private Toolbar toolbar;
     private String activeFragmentTag;
     private ViewGroup proceedLayout;
+    String tag = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,12 +98,26 @@ public class PrefsActivity extends BaseActivity implements View.OnClickListener 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_help, menu);
+        final MenuItem menuItem = menu.findItem(R.id.menu_notification);
+        View actionView = menuItem.getActionView();
+        TextView count = (TextView) actionView.findViewById(R.id.notification_pill);
+        int size = Utils.notificationCount();
+        count.setText(String.valueOf(size));
+        if(size == 0)
+            count.setVisibility(View.GONE);
+        actionView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(menuItem);
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Utils.onHelpItemsClicked(item, this, "Pref Screen");
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.prefs_fragment_container);
+        Utils.onHelpItemsClicked(item, this, Utils.getScreenNameByTag(fragment.getTag()));
         return super.onOptionsItemSelected(item);
     }
 }

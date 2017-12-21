@@ -2,11 +2,17 @@ package com.picsdream.picsdreamsdk.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import com.picsdream.picsdreamsdk.R;
+import com.picsdream.picsdreamsdk.model.network.InitialAppDataResponse;
 import com.picsdream.picsdreamsdk.model.request.Address;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
 

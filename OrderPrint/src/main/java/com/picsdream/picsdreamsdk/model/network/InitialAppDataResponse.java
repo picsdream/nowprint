@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.picsdream.picsdreamsdk.model.Country;
 import com.picsdream.picsdreamsdk.model.Item;
+import com.picsdream.picsdreamsdk.model.Notification;
 import com.picsdream.picsdreamsdk.model.Region;
 import com.picsdream.picsdreamsdk.model.ShippingText;
 import com.picsdream.picsdreamsdk.model.payment.Gateways;
@@ -54,6 +55,10 @@ public class InitialAppDataResponse {
     @SerializedName("countries")
     @Expose
     private List<Country> countries = null;
+
+    @SerializedName("notifications")
+    @Expose
+    private List<Notification> notifications = null;
 
     public List<ShippingText> getShippingTexts() {
         return shippingTexts;
@@ -159,4 +164,11 @@ public class InitialAppDataResponse {
         this.countries = countries;
     }
 
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
 }

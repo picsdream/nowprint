@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "701411433675",
+    "firebase_url": "https://orderaprint-b5c74.firebaseio.com",
+    "project_id": "orderaprint-b5c74",
+    "storage_bucket": "orderaprint-b5c74.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701411433675:android:9f242cf13e80db22",
+        "android_client_info": {
+          "package_name": "com.picsdream.picsdreamsdk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "701411433675-j6jl27utvhuucc28bp2chmcc7gg423rb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwEwUe92jFYDNAGXx6FKj8FxrRJ5MKWB0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

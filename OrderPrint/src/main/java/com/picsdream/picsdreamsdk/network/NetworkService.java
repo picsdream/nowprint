@@ -25,6 +25,14 @@ public interface NetworkService {
     Call<ResponseBody> getInitialAppData(@Query("app_id") String appId);
 
     @NonNull
+    @GET(Constants.URL_GET_ADDRESS)
+    Call<ResponseBody> getAddress(@Query("email") String email, @Query("mobile") String mobile);
+
+    @NonNull
+    @GET(Constants.URL_REQUEST_CALL)
+    Call<ResponseBody> requestCall(@Query("mobile") String mobile);
+
+    @NonNull
     @GET(Constants.URL_GET_AVAILABLE_COUPONS)
     Call<ResponseBody> getAvailableCoupons(@Query("app_id") String appId);
 
