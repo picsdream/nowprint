@@ -2,11 +2,13 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="0dp">
     <RelativeLayout
         android:layout_centerInParent="true"
         android:layout_height="wrap_content"
-        android:layout_width="250dp">
+        android:layout_width="wrap_content"
+        android:padding="0dp">
         <Button android:layout_height="24dp"
             android:layout_width="24dp"
             android:background="@drawable/ic_close"
@@ -18,45 +20,72 @@
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="Do you want to print this photo"
-                android:padding="10dp"/>
-            <ImageView android:layout_width="match_parent"
+            android:id="@+id/popParent"
+            android:orientation="vertical"
+            android:padding="0dp">
+            <ImageView android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/dialogImage" />
-            <LinearLayout
-                android:layout_width="match_parent"
+            <LinearLayout android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <Button android:layout_width="0dp"
+                android:orientation="vertical"
+                android:padding="20dp">
+                <TextView
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="No"
-                    android:background="@color/app_red"
+                    android:layout_width="match_parent"
+                    android:id="@+id/heading"
+                    android:text="18% Off, Use Code HNY18"
+                    android:textSize="20dp"
                     android:fontFamily="@string/font_family_medium"
-                    android:gravity="center"
-                    android:padding="@dimen/spacing_medium_2"
-                    android:id="@+id/negativeButton"
-                    android:textAllCaps="true"
-                    android:textSize="@dimen/text_regular"
-                    android:clickable="true"
-                    android:textColor="@color/white"/>
-                <Button android:layout_width="0dp"
+                    android:textColor="@color/picsDreamBlack"/>
+                <TextView
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Yes"
-                    android:background="@color/app_green"
-                    android:fontFamily="@string/font_family_medium"
-                    android:gravity="center"
-                    android:padding="@dimen/spacing_medium_2"
-                    android:id="@+id/positiveButton"
-                    android:textAllCaps="true"
-                    android:textSize="@dimen/text_regular"
-                    android:clickable="true"
-                    android:textColor="@color/white"/>
+                    android:layout_width="match_parent"
+                    android:id="@+id/content"
+                    android:textSize="16dp"
+                    android:text="Do you want to print this photo?" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <Button android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Print Photo"
+                        android:background="@drawable/shape_btn_bottom_accent"
+                        android:fontFamily="@string/font_family_medium"
+                        android:gravity="center"
+                        android:padding="@dimen/spacing_medium_2"
+                        android:id="@+id/positiveButton"
+                        android:textAllCaps="true"
+                        android:layout_marginTop="15dp"
+                        android:textSize="@dimen/text_regular"
+                        android:clickable="true"
+                        android:textColor="@color/white"/>
+                    <!--<TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="Yes"
+                        android:fontFamily="@string/font_family_medium"
+                        android:textSize="@dimen/text_large"
+                        android:clickable="true"
+                        android:id="@+id/positiveButton"
+                        android:textColor="@color/app_green"
+                        android:paddingRight="30dp"
+                        android:paddingTop="10dp"
+                        />-->
+                    <!--<TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="No"
+                        android:fontFamily="@string/font_family_medium"
+                        android:textSize="@dimen/text_large"
+                        android:clickable="true"
+                        android:id="@+id/negativeButton"
+                        android:textColor="@color/app_red"
+                        android:paddingRight="30dp"
+                        android:paddingTop="10dp"
+                        />-->
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

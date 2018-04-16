@@ -18,6 +18,7 @@ public interface Constants {
 
     String BASE_URL = "https://www.picsdream.com/api/v1/";
     String URL_BEFORE_APP_DATA = BASE_URL + "moments/before";
+    String URL_CONFIRMATION_APP_DATA = BASE_URL + "moments/confirmation";
     String ITEM_FRAGMENT_TAG = "item_tag";
     String TAG_TYPE = "item_tag_type";
     String TAG_MEDIA = "item_tag_media";

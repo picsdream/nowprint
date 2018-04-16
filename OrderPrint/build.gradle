@@ -23,7 +23,7 @@ ext {
     siteUrl = 'https://github.com/picsdream/nowprint'
     gitUrl = 'https://github.com/picsdream/nowprint.git'
 
-    libraryVersion = '2.0.2'
+    libraryVersion = '2.0.3'
 
     developerId = 'raj.ankur'
     developerName = 'Raj Ankur'
@@ -48,7 +48,7 @@ ext {
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    buildToolsVersion '27.0.3'
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 26
@@ -98,7 +98,6 @@ dependencies {
     compile 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.google.android.gms:play-services-analytics:11.6.2'
-//    compile 'io.intercom.android:intercom-sdk-base:4.+'
 
     compile 'com.google.firebase:firebase-core:11.6.2'
     compile 'com.google.firebase:firebase-messaging:11.6.2'

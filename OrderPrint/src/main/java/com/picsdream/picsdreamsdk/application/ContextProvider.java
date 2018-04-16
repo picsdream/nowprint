@@ -1,13 +1,20 @@
 package com.picsdream.picsdreamsdk.application;
 
+import android.app.Activity;
 import android.app.Application;
+import android.os.Bundle;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.analytics.ecommerce.Product;
+import com.google.android.gms.analytics.ecommerce.ProductAction;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.picsdream.picsdreamsdk.util.AnalyticsTrackers;
 import com.picsdream.picsdreamsdk.util.SharedPrefsUtil;
+
+import static com.google.firebase.analytics.FirebaseAnalytics.*;
 
 /**
  * Authored by vipulkumar on 02/09/17.
@@ -90,5 +97,36 @@ public class ContextProvider {
             // Build and send an Event.
             t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
         }
+    }
+
+    public static void trackEcommerce(Product product, String productActionString,  String category, String action, String label) {
+        if (!SharedPrefsUtil.getSandboxMode()) {
+            Tracker t = getGoogleAnalyticsTracker();
+
+            ProductAction productAction = new ProductAction(ProductAction.ACTION_CLICK)
+                    .setProductActionList(productActionString);
+
+            t.send(new HitBuilders.EventBuilder().addProduct(product)
+                    .setProductAction(productAction).setCategory(category).setAction(action).setLabel(label).build());
+        }
+    }
+
+    public static void trackEcommerce(Activity activity, String name, String cat, String medium, String size, double price) {
+        Product product = new Product()
+
+                .setName(name)
+                .setCategory(cat)
+                .setBrand(medium)
+                .setVariant(size)
+                .setPosition(1);
+
+        ProductAction productAction = new ProductAction(ProductAction.ACTION_CLICK)
+                .setProductActionList("View Product");
+
+        HitBuilders.ScreenViewBuilder builder = new HitBuilders.ScreenViewBuilder()
+                .addProduct(product)
+                .setProductAction(productAction);
+
+        getGoogleAnalyticsTracker().send(builder.build());
     }
 }

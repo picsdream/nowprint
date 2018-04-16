@@ -1,24 +1,24 @@
 package com.picsdream.picsdreamsdk.util;
 
-import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.activity.InitialDataLoadActivity;
-import com.picsdream.picsdreamsdk.activity.PurchaseActivity;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
 import com.squareup.picasso.Picasso;
 
@@ -34,8 +34,9 @@ import cz.msebera.android.httpclient.Header;
  */
 
 public class OrderPrint {
-
+    public static int popWidth = 0;
     public static OrderPrint getInstance() {
+        popWidth = Resources.getSystem().getDisplayMetrics().widthPixels - 100;
         return new OrderPrint();
     }
 
@@ -62,7 +63,6 @@ public class OrderPrint {
         }
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog);
-        dialog.setTitle("");
 
         ImageView dialogImage = (ImageView) dialog.findViewById(R.id.dialogImage);
         Button dialogButton = (Button) dialog.findViewById(R.id.dialogButton);
@@ -72,8 +72,13 @@ public class OrderPrint {
             dialogButton.setText(obj.getString("text"));
             Picasso.with(context)
                     .load(obj.getString("img"))
+                    .resize(popWidth, 0)
                     .into(dialogImage);
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(dialog.getWindow().getAttributes());
+            lp.width = popWidth;
             dialog.show();
+            dialog.getWindow().setAttributes(lp);
             ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Intro Popup", "");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -92,6 +97,7 @@ public class OrderPrint {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+                ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Intro Popup Dismiss", "");
             }
         });
     }
@@ -103,20 +109,54 @@ public class OrderPrint {
     }
 
     public void ad(final Context context) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(Constants.URL_CONFIRMATION_APP_DATA, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject responseBody) {
+                try {
+                    JSONObject pop = responseBody.getJSONObject("pop");
+                    adPop(context,
+                            pop.getString("promptHeading"),
+                            pop.getString("promptText"),
+                            pop.getString("positiveText"),
+                            pop.getString("negativeText"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void adPop(final Context context, String heading, String text, String positive, String negative) {
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_confirmation);
-        dialog.setTitle("Title");
 
+        LinearLayout popParent = (LinearLayout) dialog.findViewById(R.id.popParent);
         ImageView dialogImage = (ImageView) dialog.findViewById(R.id.dialogImage);
+        TextView headingTextView = (TextView) dialog.findViewById(R.id.heading);
+        TextView contentTextView = (TextView) dialog.findViewById(R.id.content);
         Button positiveButton = (Button) dialog.findViewById(R.id.positiveButton);
-        Button negativeButton = (Button) dialog.findViewById(R.id.negativeButton);
+//        TextView negativeButton = (TextView) dialog.findViewById(R.id.negativeButton);
         Button closeButton = (Button) dialog.findViewById(R.id.closeButton);
+
+        headingTextView.setText(heading);
+        contentTextView.setText(text);
+        positiveButton.setText(positive);
+//        negativeButton.setText(negative);
 
         Picasso.with(context)
                 .load(SharedPrefsUtil.getImageUriString())
-                .resize(Utils.dpToPx(250), 0)
+                .resize(popWidth + 10, 0)
                 .into(dialogImage);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.horizontalMargin = 0;
+        lp.verticalMargin = 0;
         dialog.show();
+        dialog.getWindow().setAttributes(lp);
+
         ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Print This Popup", "");
 
         positiveButton.setOnClickListener(new View.OnClickListener() {
@@ -126,17 +166,11 @@ public class OrderPrint {
             }
         });
 
-        negativeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+                ContextProvider.trackEvent(SharedPrefsUtil.getAppKey(), "Print This Popup Dismiss", "");
             }
         });
     }
@@ -144,6 +178,7 @@ public class OrderPrint {
     public OrderPrint initialize(String appKey) {
         SharedPrefsUtil.setAppKey(appKey);
         ContextProvider.trackEvent(appKey, "SDK Initialised", "");
+
         return this;
     }
 

@@ -3,10 +3,13 @@ package com.picsdream.picsdreamsdk.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.picsdream.picsdreamsdk.R;
 import com.picsdream.picsdreamsdk.application.ContextProvider;
@@ -23,6 +26,10 @@ import com.picsdream.picsdreamsdk.util.Utils;
 import com.picsdream.picsdreamsdk.view.CouponView;
 import com.picsdream.picsdreamsdk.view.InitialDataView;
 
+import java.net.URL;
+
+import me.pushy.sdk.Pushy;
+
 /**
  * Authored by vipulkumar on 12/09/17.
  */
@@ -37,6 +44,9 @@ public class InitialDataLoadActivity extends BaseActivity implements InitialData
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial_data_load);
+
+        new RegisterForPushNotificationsAsync().execute();
+        Pushy.listen(this);
 
         initialDataPresenter = new InitialDataPresenter(this);
         couponPresenter = new CouponPresenter(this);
@@ -101,5 +111,40 @@ public class InitialDataLoadActivity extends BaseActivity implements InitialData
     protected void onResume() {
         super.onResume();
         ContextProvider.trackScreenView("Start Screen");
+    }
+
+    private class RegisterForPushNotificationsAsync extends AsyncTask<Void, Void, Exception> {
+        protected Exception doInBackground(Void... params) {
+            try {
+                // Assign a unique token to this device
+                String deviceToken = Pushy.register(getApplicationContext());
+
+                // Log it for debugging purposes
+                Log.d("MyApp", "Pushy device token: " + deviceToken);
+
+                // Send the token to your backend server via an HTTP GET request
+//                new URL("https://{YOUR_API_HOSTNAME}/register/device?token=" + deviceToken).openConnection();
+            }
+            catch (Exception exc) {
+                Log.d("MyApp", exc.getMessage());
+                // Return exc to onPostExecute
+                return exc;
+            }
+
+            // Success
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Exception exc) {
+            // Failed?
+            if (exc != null) {
+                // Show error as toast message
+                Toast.makeText(getApplicationContext(), exc.toString(), Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            // Succeeded, do something to alert the user
+        }
     }
 }
